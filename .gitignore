@@ -17,6 +17,8 @@ Thumbs.db
 *.o
 *.so
 *.pyc
+bin
+build
  
 # Packages #
 ############
