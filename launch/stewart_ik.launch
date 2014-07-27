@@ -1,0 +1,6 @@
+<launch>
+
+	<node pkg="stewart_platform" type="stewart_ik.py" name="stewart_platform_ik" output="screen" />
+
+		<rosparam command="load" file="$(find stewart_platform)/config/platformModel.yaml" />
+</launch>
