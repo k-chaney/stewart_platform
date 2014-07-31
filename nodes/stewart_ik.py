@@ -8,7 +8,7 @@ import numpy as np
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Float64
 from sensor_msgs.msg import JointState
-from math import sin, cos, pi
+from math import sin, cos, pi, sqrt, asin, atan2
 
 
 class stewart_platform:
@@ -53,10 +53,14 @@ class stewart_platform:
 		rospy.init_node("stewart_platform")
 		self.joint_pub = rospy.Publisher('/stewart/JointState',JointState)
 
+		self.stewart_joints = JointState() # will be passed to ros
+		self.joint_names = ["joint_%d" % i for i in range(0,6) ] # joint names
+		self.joint_positions = np.zeros( (6) ) # positions will be changed
+
 
 	def ikSolver(self,msg): #twist message expected
 		twist = np.array( [ msg.linear.x, msg.linear.y, msg.linear.z, msg.angular.x, msg.angular.y, msg.angular.z ] )
-		print twist
+		#print twist
 		
 		# B is self.pos_base
 		# P is self.pos_top
@@ -64,29 +68,44 @@ class stewart_platform:
 		# R is self.L_m
 		# D is self.L_s
 		a = twist[3]
-		platform_pose = self.pos_top * np.array( [[1,0,0],[0,cos(a),-sin(a)],[0,sin(a),cos(a)] ] ) # angle x
+		platform_pose = np.dot( self.pos_top, np.array( [[1,0,0],[0,cos(a),-sin(a)],[0,sin(a),cos(a)] ] ) ) # angle x
 		a = twist[4]
-		platform_pose = self.pos_top * np.array( [[cos(a),0,sin(a)],[0,1,0],[-sin(a),0,cos(a)] ] ) # angle y
+		platform_pose = np.dot( self.pos_top, np.array( [[cos(a),0,sin(a)],[0,1,0],[-sin(a),0,cos(a)] ] ) ) # angle y
 		a = twist[5]
-		platform_pose = self.pos_top * np.array( [[cos(a),-sin(a),0],[sin(a),cos(a),0],[0,0,1] ] ) # angle z
+		platform_pose = np.dot( self.pos_top, np.array( [[cos(a),-sin(a),0],[sin(a),cos(a),0],[0,0,1] ] ) ) # angle z
 		platform_pose[:,0] = platform_pose[:,0] + twist[0] # translate x
 		platform_pose[:,1] = platform_pose[:,1] + twist[1] # translate y
 		platform_pose[:,2] = platform_pose[:,2] + twist[2] # translate z
-		self.stweart_joints = JointState() # will be passed to ros
-		self.joint_names = ["joint_%d" % i for i in range(0,6) ] # joint names
-		self.joint_positions = np.zeros( (6) ) # positions will be changed
-		joint_velocities = np.zeros( (6) ) # won't change
-		joint_efforts = np.zeros( (6) ) # won't change
+
 		success = 0 # success check
 		
 		for i in range(0,6):
-			L = np.linalg.norm(platform_pose(i)-self.pos_base(i))
+			L = np.asscalar( np.linalg.norm(platform_pose[i]-self.pos_base[i]) )
 			# I don't understand this......
-			a = 2*self.L_m*( platform_pose(i,3) - self.pos_base(i,3) )
-			b = 2*self.L_m*( sin(self.angle_base(i)) * (platform_pose(i,1)-self.pos_base(i,1)) - cos(self.angle_base(i)) * ( platform_pose(i,2)-self.pos_base(i,2) ) )
-			c = ( L^2 - self.L_s^2 + self.L_m^2 )
-
-		
+			a = np.asscalar(2*self.L_m*( platform_pose[i,2] - self.pos_base[i,2] ))
+			b = np.asscalar(2*self.L_m*( sin(self.angle_base[i]) * (platform_pose[i,0]-self.pos_base[i,0]) - cos(self.angle_base[i]) * ( platform_pose[i,1]-self.pos_base[i,1] ) ))
+			c = ( L*L - self.L_s*self.L_s + self.L_m*self.L_m )
+			#print type(a) , type(b), type(c)
+			#print sqrt(a*a + b*b)
+			#print c/sqrt(a*a + b*b)
+			#print asin( c/sqrt(a*a + b*b) )
+			#print atan2(b,a)
+			try:
+				theta = asin( c/sqrt(a*a + b*b) ) - atan2(b,a)
+				if self.Theta_min <= theta <= self.Theta_max:
+					self.joint_positions[i] = theta
+					success += 1
+				else:
+					self.joint_positions[i] = 0
+			except:
+				self.joint_positions[i] = 0
+				pass
+		print self.joint_positions
+		if success==6:
+			self.stewart_joints.position = self.joint_positions
+			self.joint_pub.publish(self.stewart_joints)
+		else:
+			print "No IK solution"
 
 if __name__ == '__main__':
 	print "loading model", rospy.get_param('stewart_platform')
