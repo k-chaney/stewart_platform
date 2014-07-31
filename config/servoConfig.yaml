@@ -1,0 +1,7 @@
+servo_controller:
+    port: '/dev/ttyS101'
+    bufferSize: 2048
+    baud: 9600
+    dataBits: 8
+    parity: 'n'
+    stopBits: 1
