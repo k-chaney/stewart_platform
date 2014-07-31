@@ -1,6 +1,7 @@
 <launch>
 
 	<node pkg="stewart_platform" type="stewart_ik.py" name="stewart_platform_ik" output="screen" />
+	<node pkg="stewart_platform" type="stewart_move_servos.py" name="stewart_servo_controller" output="screen" />
 
 	<rosparam command="load" file="$(find stewart_platform)/config/platformModel.yaml" />
 	<rosparam command="load" file="$(find stewart_platform)/config/servoConfig.yaml" />

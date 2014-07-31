@@ -8,7 +8,7 @@ import numpy as np
 from sensor_msgs.msg import JointState
 from math import pi
 import serial
-
+from threading import Thread
 
 class servo_controller:
 	def __init__(self,params):
@@ -24,23 +24,34 @@ class servo_controller:
 		# initial goal position is zeros
 		self.goalPositions = np.zeros(6)
 		self.curPositions = np.zeros(6)
-		writeNextPos(self.goalPositions)		
+		writeNextPos(self.goalPositions)
+		t = Thread(target=self.mainControlLoop)
+		t.start()
+
+	def mainControlLoop(self):
+		L = 10 # length of filter--I should be using a better filter....this one sucks...however it does come straight from another PhD's thesis
+		while not rospy.is_shutdown():
+			self.curPositions = (self.curPositions*(L-1)+self.goalPosition)/L
+			writeNextPos(self.curPositions)
 
 	def writeNextPos(positions):
 		for i in range(0,len(positions)):
 			self.controller.write(get_command(i,positions[i]*10.5 + 1500))
 
 	def get_command(channel, target):
+		target = int(min(2400,max(600,target))) # sanatize the input of the inputs
+		channel = int(channel)
 		target = target*4
 		serialBytes = chr(0x84)+chr(channel)+chr(target & 0x7F)+chr((target >> 7) & 0x7F)
 		return serialBytes
 
 	def writeGoal(msg):
-		print msg
 		degreeShift = -45
 		rev_mask = np.array( [1 -1 -1 -1 1 1] )
+		self.goalPositions = np.array( msg.position )
+		print self.goalPositions
+		self.goalPositions = np.multiply( ( (self.goalPositions*180/3.14) + degreeShift) , rev_mask )
 
-		
 if __name__ == '__main__':
 	print "loading servo controller", rospy.get_param('servo_controller')
 	platform = servo_controller( rospy.get_param('servo_controller')  )
