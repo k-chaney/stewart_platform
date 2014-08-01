@@ -47,8 +47,6 @@ class stewart_platform:
 
 			#robot = {pos_top pos_base angle_base L_m L_s Theta_min Theta_max title_str};
 
-		print self.pos_top
-
 		# some ros stuff
 		self.angle_base = self.angle_base + pi/2
 		self.curTwist = Twist()

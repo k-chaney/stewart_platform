@@ -47,7 +47,7 @@ class servo_controller:
 
 	def writeGoal(msg):
 		degreeShift = -45
-		rev_mask = np.array( [1, -1, -1, -1, 1, 1] )
+		rev_mask = np.array( [1 -1 -1 -1 1 1] )
 		self.goalPositions = np.array( msg.position )
 		print self.goalPositions
 		self.goalPositions = np.multiply( ( (self.goalPositions*180/3.14) + degreeShift) , rev_mask )

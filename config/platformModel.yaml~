@@ -6,6 +6,6 @@ stewart_platform:
     radius_t : 0.05 #radius of the top where legs attach to the top
     Theta_min : 0 #%-pi/4; %minimum angle for the master link (L_m) from base plane
     Theta_max : 1.57079632679 #3*pi/4; maximum angle for the master link (L_m) from base plane
-    top_offset_angle : 1.0472 #2*pi/6; %60 degrees = 2*pi/6:  offset of top plate from base
-    L_m : 0.1683 #length of the master link, driven by servo (m)
+    top_offset_angle : 0 #2*pi/6; %60 degrees = 2*pi/6:  offset of top plate from base
+    L_m : 0.1657 #length of the master link, driven by servo (m)
     L_s : 0.2156 #Length of the slave link from master link to top platform (m).  
