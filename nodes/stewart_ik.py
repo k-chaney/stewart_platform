@@ -94,7 +94,7 @@ class stewart_platform:
 			#print atan2(b,a)
 			try:
 				theta = asin( c/sqrt(a*a + b*b) ) - atan2(b,a)
-				if self.Theta_min <= theta <= self.Theta_max:
+				if self.Theta_min < theta < self.Theta_max:
 					self.joint_positions[i] = theta
 					success += 1
 				else:
@@ -102,7 +102,6 @@ class stewart_platform:
 			except:
 				self.joint_positions[i] = 0
 				pass
-		print self.joint_positions
 		if success==6:
 			self.stewart_joints.position = self.joint_positions
 			self.joint_pub.publish(self.stewart_joints)

@@ -28,3 +28,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
+
+find_package( OpenCV REQUIRED )
+rosbuild_add_executable( CircleDetect2 src/CircleDetectROS_dc1394.cpp )
+target_link_libraries( CircleDetect2 "dc1394" ${OpenCV_LIBS})
