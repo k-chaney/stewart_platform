@@ -8,3 +8,15 @@ gamma: 1.2000000000000002
 guid: 00b09d01008b7769
 use_ros_time: true
 video_mode: format7_mode0
+
+camera:
+    focal_length: 1.80
+    image_width: 640
+    image_height: 480
+    detPitch: 6
+
+processingScale: 2
+tgtEdge: 5.00
+circleRadius: 2.00
+lambda: 0.4
+zOffset: 0.35
