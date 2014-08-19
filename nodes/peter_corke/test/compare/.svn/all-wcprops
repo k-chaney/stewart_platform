@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/11/trunk/robotics-toolbox-python/test/compare
+END
+compare.py
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/11/trunk/robotics-toolbox-python/test/compare/compare.py
+END
+genpath.m
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/6/trunk/robotics-toolbox-python/test/compare/genpath.m
+END
+puma560m.dat
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/6/trunk/robotics-toolbox-python/test/compare/puma560m.dat
+END
+path.dat
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/6/trunk/robotics-toolbox-python/test/compare/path.dat
+END
+puma560.dat
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/6/trunk/robotics-toolbox-python/test/compare/puma560.dat
+END

@@ -6,39 +6,122 @@ roslib.load_manifest(PACKAGE)
 import rospy
 import numpy as np
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, Float64MultiArray
 from sensor_msgs.msg import JointState
 from math import sin, cos, pi, sqrt, asin, atan2
+from transform import *
 
-
-class stewart_platform:
+class IBVS:
 	def __init__(self): #expects the stewart_platform params from platformModel.yaml
-		# load parameters for robot and startup the model
+		# load parameters
 		self.tgtEdge = rospy.get_param('tgtEdge')
 		self.focalLength = rospy.get_param("camera/focal_length") / 1000
 		self.imageWidth = rospy.get_param("camera/image_width")
 		self.imageHeight = rospy.get_param("camera/image_height")
 		self.detPitch = rospy.get_param("camera/detPitch")
-		self.detPitchM = self.defPitch / 1000000
+		self.detPitchM = self.detPitch / 1000000 # python can't handle this very well..... need to figure out how to use this precision
 		self.sensorWidth = self.detPitchM*self.imageWidth
 		self.sensorHeight = self.detPitchM*self.imageHeight
 		self.processingScale = rospy.get_param("processingScale")
 		self.tgtEdge = rospy.get_param("tgtEdge")
 		self.circleRadius = rospy.get_param("circleRadius")
-		self.lambda = rospy.get_param("lambda")
+		self.lmbda = rospy.get_param("lambda")
 		self.zOffset = rospy.get_param("zOffset")
 		
-		self.hTc = rotationMatrix(0,pi/2,pi/2)
-	
+		self.hTc = rpy2tr(0, pi/2, pi/2) # just the identity for now
+		self.cTh = np.linalg.inv(self.hTc) # inverse of what's above--just using the numpy inverse
+		
+		self.bTh = np.identity(4) # base to hand will start out at stow position--bTh will actually control the movement
+		self.twist_pub = rospy.Publisher('/stewart/Twist',Twist)
+		self.cur_twist = Twist()
+		self.cur_twist.angular.x = 0
+		self.cur_twist.angular.y = 0
+		self.cur_twist.angular.z = 0
+		self.cur_twist.linear.x = 0
+		self.cur_twist.linear.y = 0
+		self.cur_twist.linear.z = 0
+		self.twist_pub.publish(self.cur_twist)
+
+		self.u0 = self.imageWidth/2
+		self.v0 = self.imageHeight/2
+		pixelChange = 100
+		self.uv_Pstar = np.array([[self.u0-pixelChange ,self.v0-pixelChange ],[self.u0-pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0-pixelChange  ]])
+		#self.uv_Pstar = np.array( [[ 293.,  179.],[ 289.,  351.],[ 463.,  351.],[ 463.,  179.]])
+
+	def circle_track(self,msg):
+		print msg
+		x_c = 0
+		y_c = 0
+		for i in range(0,4):
+			x_c += msg.data[3*i]
+			y_c += msg.data[3*i+1]
+		x_c /= 4
+		y_c /= 4
+
+		uv_pxy_ordered = np.zeros((4,2))
+		uv_radii_ordered = np.zeros(4)
+		for Pt in range(0,4):
+			if ((msg.data[Pt*3] < x_c) and (msg.data[Pt*3+1] < y_c)):
+				uv_pxy_ordered[0][0] = msg.data[Pt*3]
+				uv_pxy_ordered[0][1] = msg.data[Pt*3+1]
+				uv_radii_ordered[0] = msg.data[Pt*3+2]
+			elif ((msg.data[Pt*3] < x_c) and (msg.data[Pt*3+1] > y_c)):
+				uv_pxy_ordered[1][0] = msg.data[Pt*3]
+				uv_pxy_ordered[1][1] = msg.data[Pt*3+1]
+				uv_radii_ordered[1] = msg.data[Pt*3+2]
+			elif ((msg.data[Pt*3] > x_c) and (msg.data[Pt*3+1] > y_c)):
+				uv_pxy_ordered[2][0] = msg.data[Pt*3]
+				uv_pxy_ordered[2][1] = msg.data[Pt*3+1]
+				uv_radii_ordered[2] = msg.data[Pt*3+2]
+			elif ((msg.data[Pt*3] > x_c) and (msg.data[Pt*3+1] < y_c)):
+				uv_pxy_ordered[3][0] = msg.data[Pt*3]
+				uv_pxy_ordered[3][1] = msg.data[Pt*3+1]
+				uv_radii_ordered[3] = msg.data[Pt*3+2]
+		print uv_pxy_ordered
+		print uv_radii_ordered
+		zEst = np.zeros(uv_radii_ordered.shape)
+
+		for Pt in range(0,4):
+			zEst[Pt] = (self.circleRadius*self.focalLength*1000)/(uv_radii_ordered[Pt]*self.detPitch/1000) # this shindig helps preserve being able to calculate everything
+		print zEst
+		print self.uv_Pstar
+		e = self.uv_Pstar - uv_pxy_ordered
+		print e
+
+def visjac_p(f,u0,v0,rho, uv, Z):
+
+    if uv.shape[1] > 1
+        L = np.array([])
+        for i in range(0,uv.shape[0]):
+            L = np.vstack( [L, visjac_p(f,u0,v0,rho, uv[:,i], Z[i])] );
+        return L
+    end
+   
+    % convert to normalized image-plane coordinates
+    x = (uv[1] - u0) * rho(1) / f;
+    y = (uv[2] - v0) * rho(2) / f;
+
+    L = [
+        1/Z, 0, -x/Z, -x*y, (1+x^2), -y
+        0, 1/Z, -y/Z, -(1+y^2), x*y, x
+        ];
+
+    L = -f * diag(1./rho) * L;
+    return L
+
+
+
 def rotationMatrix(x,y,z):
 	M = np.dot( np.identity(3), np.array( [[1,0,0],[0,cos(x),-sin(x)],[0,sin(x),cos(x)] ] ) ) # angle x
 	M = np.dot( M, np.array( [[cos(y),0,sin(y)],[0,1,0],[-sin(y),0,cos(y)] ] ) ) # angle y
 	M = np.dot( M, np.array( [[cos(y),-sin(y),0],[sin(y),cos(y),0],[0,0,1] ] ) ) # angle z
 	return M
 def translationMatrix(x,y,z):
-	return np.array([[x,y,z],[x,y,z],[x,y,z]] )	
+	return np.array([[x,y,z],[x,y,z],[x,y,z]] )
+
+	
 if __name__ == '__main__':
-	print "loading model", rospy.get_param('stewart_platform')
-	platform = stewart_platform( rospy.get_param('stewart_platform') )
-	rospy.Subscriber('/stewart/Twist', Twist, platform.ikSolver)
+	rospy.init_node('IBVS_Controller')
+	controller = IBVS()
+	rospy.Subscriber('/tracker/circle_data',  Float64MultiArray , controller.circle_track)
 	rospy.spin()
