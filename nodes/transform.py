@@ -6,20 +6,16 @@ Primitive operations for 3x3 orthonormal and 4x4 homogeneous matrices.
 """
 
 from numpy import *
-from robot.utility import *
+from utility import *
 from numpy.linalg import norm
 from Quaternion import *
-from diff2tr import *
+
 
 print "in transform"
 
 def diff2tr(d):
     d = mat(d).flatten().T
-    return mat([[0,       -d[5,0],   d[4,0],  d[0,0]],\
-                [d[5,0],        0,  -d[3,0],  d[1,0]],\
-                [-d[4,0],  d[3,0],        0,  d[2,0]],\
-                [0,             0,        0,      0]])
-
+    return mat([[0,-d[5,0],d[4,0],d[0,0]],[d[5,0], 0,-d[3,0],d[1,0]], [-d[4,0],d[3,0],0,  d[2,0]], [0,0,0,0]])
 
 def rotx(theta):
     """
@@ -338,7 +334,7 @@ def rpy2r(roll, pitch=None,yaw=None,zyx=False,deg=False):
         pitch = pitch * d2r;
         yaw = yaw * d2r;
         
-    if ~zyx:
+    if not zyx:
         # XYZ order
         if n>1:
             R = []
@@ -389,7 +385,7 @@ def rpy2tr(roll, pitch=None, yaw=None, zyx=False, deg=False):
     @see:  L{tr2rpy}, L{rpy2r}, L{tr2eul}
 
     """
-    return r2t( rpy2r(roll, pitch, yaw, zxy, deg) )
+    return r2t( rpy2r(roll, pitch, yaw, zyx, deg) )
 
 ###################################### OA vector form
 

@@ -16,8 +16,8 @@ class ImageConverter
   image_transport::ImageTransport it_;
   image_transport::Subscriber image_sub_;
   image_transport::Publisher image_pub_;
-  ros::Publisher xy_pub;
-  std_msgs::Float64MultiArray centers;
+  ros::Publisher circle_pub;
+  std_msgs::Float64MultiArray circle_data;
   ros::Publisher rad_pub;
   std_msgs::Float64MultiArray radii;
   int processingScale;
@@ -40,12 +40,9 @@ public:
     image_pub_ = it_.advertise("out", 1);
     image_sub_ = it_.subscribe("in", 1, &ImageConverter::imageCb, this);
     cv::namedWindow(WINDOW);
-    xy_pub = nh_.advertise<std_msgs::Float64MultiArray>("centers", 10);
-    centers.data.resize(8);
-    rad_pub = nh_.advertise<std_msgs::Float64MultiArray>("radii", 10);
-    radii.data.resize(4);
+    circle_pub = nh_.advertise<std_msgs::Float64MultiArray>("circle_data", 10);
+    circle_data.data.resize(12);
   }
-
   ~ImageConverter()
   {
     cv::destroyWindow(WINDOW);
@@ -80,14 +77,14 @@ public:
     for( int i = 0; i < (circles.size()); i++ )
     {
             // ROS stuff
-            centers.data[2*i]=circles[i][0];
-            centers.data[2*i+1]=circles[i][1];
-            radii.data[i]=circles[i][2];
+            circle_data.data[3*i]=circles[i][0]*processingScale;
+            circle_data.data[3*i+1]=circles[i][1]*processingScale;
+            circle_data.data[3*i+2]=circles[i][2]*processingScale;
     }
     if (circles.size()==4)
     {
-      xy_pub.publish(centers);
-      rad_pub.publish(radii);
+      std::cout << circle_data << std::endl;
+      circle_pub.publish(circle_data);
     }
     
     /// Draw the circles detected
@@ -101,7 +98,7 @@ public:
             cv::circle( cv_ptr->image, center, radius, cv::Scalar(0,0,255), 3, 8, 0 );
     }
 
-    std::cout << "circles" << circles.size() << std::endl;
+    //std::cout << "circles" << circles.size() << std::endl;
 
 
     cv::imshow(WINDOW, cv_ptr->image);

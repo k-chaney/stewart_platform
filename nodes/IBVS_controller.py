@@ -5,6 +5,7 @@ import roslib
 roslib.load_manifest(PACKAGE)
 import rospy
 import numpy as np
+from numpy.linalg import pinv
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Float64, Float64MultiArray
 from sensor_msgs.msg import JointState
@@ -19,7 +20,7 @@ class IBVS:
 		self.imageWidth = rospy.get_param("camera/image_width")
 		self.imageHeight = rospy.get_param("camera/image_height")
 		self.detPitch = rospy.get_param("camera/detPitch")
-		self.detPitchM = self.detPitch / 1000000 # python can't handle this very well..... need to figure out how to use this precision
+		self.detPitchM = float(self.detPitch) / 1000000
 		self.sensorWidth = self.detPitchM*self.imageWidth
 		self.sensorHeight = self.detPitchM*self.imageHeight
 		self.processingScale = rospy.get_param("processingScale")
@@ -49,7 +50,7 @@ class IBVS:
 		#self.uv_Pstar = np.array( [[ 293.,  179.],[ 289.,  351.],[ 463.,  351.],[ 463.,  179.]])
 
 	def circle_track(self,msg):
-		print msg
+		#print msg
 		x_c = 0
 		y_c = 0
 		for i in range(0,4):
@@ -77,37 +78,42 @@ class IBVS:
 				uv_pxy_ordered[3][0] = msg.data[Pt*3]
 				uv_pxy_ordered[3][1] = msg.data[Pt*3+1]
 				uv_radii_ordered[3] = msg.data[Pt*3+2]
-		print uv_pxy_ordered
-		print uv_radii_ordered
+		#print uv_pxy_ordered
+		#print uv_radii_ordered
 		zEst = np.zeros(uv_radii_ordered.shape)
 
 		for Pt in range(0,4):
-			zEst[Pt] = (self.circleRadius*self.focalLength*1000)/(uv_radii_ordered[Pt]*self.detPitch/1000) # this shindig helps preserve being able to calculate everything
-		print zEst
-		print self.uv_Pstar
+			zEst[Pt] = (self.circleRadius*self.focalLength)/(uv_radii_ordered[Pt]*self.detPitchM) # this shindig helps preserve being able to calculate everything
+		#print zEst
+		#print self.uv_Pstar
 		e = self.uv_Pstar - uv_pxy_ordered
-		print e
+		e = np.concatenate(e)
+		#print e
+		#print e
+		J = visjac_p(self.focalLength,self.u0,self.v0,self.detPitchM,uv_pxy_ordered,zEst)
+
+		v = self.lmbda * np.dot(pinv(J) , e )
+		Tdelta = trnorm(diff2tr(v))
+		print Tdelta
 
 def visjac_p(f,u0,v0,rho, uv, Z):
+	#print Z.shape
+	#print uv.shape
+	if uv.shape[0] > 2:
+		L = visjac_p(f,u0,v0,rho, uv[0], Z[0])
+		for i in range(1,uv.shape[0]):
+			L = np.vstack( [L, visjac_p(f,u0,v0,rho, uv[i], Z[i]) ] );
+		return L
 
-    if uv.shape[1] > 1
-        L = np.array([])
-        for i in range(0,uv.shape[0]):
-            L = np.vstack( [L, visjac_p(f,u0,v0,rho, uv[:,i], Z[i])] );
-        return L
-    end
-   
-    % convert to normalized image-plane coordinates
-    x = (uv[1] - u0) * rho(1) / f;
-    y = (uv[2] - v0) * rho(2) / f;
+	# convert to normalized image-plane coordinates
+	x = (uv[0] - u0) * rho / f;
+	y = (uv[1] - v0) * rho / f;
+	#print x,y
 
-    L = [
-        1/Z, 0, -x/Z, -x*y, (1+x^2), -y
-        0, 1/Z, -y/Z, -(1+y^2), x*y, x
-        ];
-
-    L = -f * diag(1./rho) * L;
-    return L
+	L = np.array([[1/Z, 0, -x/Z, -x*y, (1+x*x), -y],[0, 1/Z, -y/Z, -(1+y*y), x*y, x]])
+	#print max([1/Z, 0, -x/Z, -x*y, (1+x*x), -y,0, 1/Z, -y/Z, -(1+y*y), x*y, x])*f
+	L = -f * np.dot( np.diag(np.array([rho,rho])) , L) # again dealing with self.detPitchM being 0
+	return L
 
 
 
@@ -116,6 +122,7 @@ def rotationMatrix(x,y,z):
 	M = np.dot( M, np.array( [[cos(y),0,sin(y)],[0,1,0],[-sin(y),0,cos(y)] ] ) ) # angle y
 	M = np.dot( M, np.array( [[cos(y),-sin(y),0],[sin(y),cos(y),0],[0,0,1] ] ) ) # angle z
 	return M
+
 def translationMatrix(x,y,z):
 	return np.array([[x,y,z],[x,y,z],[x,y,z]] )
 

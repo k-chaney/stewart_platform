@@ -11,7 +11,8 @@ FILES = utility.py \
 	puma560.py \
 	puma560akb.py \
 	stanford.py \
-	twolink.py
+	twolink.py \
+	diff2tr.py
 PFILES = $(addprefix robot/, $(FILES))
 
 VERSION = $(shell svn info -r HEAD | grep Revision | awk '{print $$2}')
