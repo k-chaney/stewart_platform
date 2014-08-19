@@ -54,6 +54,7 @@ class stewart_platform:
 		self.curTwist = Twist()
 		rospy.init_node("stewart_platform")
 		self.joint_pub = rospy.Publisher('/stewart/JointState',JointState)
+		self.twist_pub = rospy.Publisher('/stewart/Twist_Feedback',Twist)
 
 		self.stewart_joints = JointState() # will be passed to ros
 		self.joint_names = ["joint_%d" % i for i in range(0,6) ] # joint names
@@ -105,6 +106,7 @@ class stewart_platform:
 		if success==6:
 			self.stewart_joints.position = self.joint_positions
 			self.joint_pub.publish(self.stewart_joints)
+			self.twist_pub.publish(msg)
 		else:
 			print "No IK solution"
 

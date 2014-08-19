@@ -49,6 +49,9 @@ class IBVS:
 		self.uv_Pstar = np.array([[self.u0-pixelChange ,self.v0-pixelChange ],[self.u0-pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0-pixelChange  ]])
 		#self.uv_Pstar = np.array( [[ 293.,  179.],[ 289.,  351.],[ 463.,  351.],[ 463.,  179.]])
 
+	def ik_feedback(self,msg):
+		self.bTh = np.dot(rpy2tr(msg.angular.x, msg.angular.y, msg.angular.z),transl(msg.linear.x, msg.linear.y, msg.linear.z))
+
 	def circle_track(self,msg):
 		#print msg
 		x_c = 0
@@ -84,7 +87,7 @@ class IBVS:
 
 		for Pt in range(0,4):
 			zEst[Pt] = (self.circleRadius*self.focalLength)/(uv_radii_ordered[Pt]*self.detPitchM) # this shindig helps preserve being able to calculate everything
-		#print zEst
+		print zEst
 		#print self.uv_Pstar
 		e = self.uv_Pstar - uv_pxy_ordered
 		e = np.concatenate(e)
@@ -95,6 +98,20 @@ class IBVS:
 		v = self.lmbda * np.dot(pinv(J) , e )
 		Tdelta = trnorm(diff2tr(v))
 		print Tdelta
+		bTc = trnorm(np.dot(self.bTh, self.hTc))
+		bTcStar = trnorm(np.dot(bTc, Tdelta))
+		bThStar = trnorm(np.dot(bTcStar, self.cTh))
+		rpy = tr2rpy(bThStar)
+		xyz = transl(bThStar) #[bThStar[0,2],bThStar[1,2],bThStar[2,2]]
+		print xyz.shape
+		self.cur_twist.angular.x = rpy[0,0]
+		self.cur_twist.angular.y = rpy[0,1]
+		self.cur_twist.angular.z = rpy[0,2]
+		self.cur_twist.linear.x = xyz[0,0]
+		self.cur_twist.linear.y = xyz[1,0]
+		self.cur_twist.linear.z = xyz[2,0]
+		self.twist_pub.publish(self.cur_twist)
+
 
 def visjac_p(f,u0,v0,rho, uv, Z):
 	#print Z.shape
@@ -131,4 +148,5 @@ if __name__ == '__main__':
 	rospy.init_node('IBVS_Controller')
 	controller = IBVS()
 	rospy.Subscriber('/tracker/circle_data',  Float64MultiArray , controller.circle_track)
+	rospy.Subscriber('/stewart/Twist_Feedback',  Twist , controller.ik_feedback)
 	rospy.spin()
