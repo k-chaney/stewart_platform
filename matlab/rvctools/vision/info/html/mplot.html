@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="http://www.petercorke.com/RVC/common/toolboxhelp.css">
+    <title>M-File Help: mplot</title>
+  </head>
+  <body>
+  <table border="0" cellspacing="0" width="100%">
+    <tr class="subheader">
+      <td class="headertitle">M-File Help: mplot</td>
+      <td class="subheader-left"><a href="matlab:open mplot">View code for mplot</a></td>
+    </tr>
+  </table>
+<h1>mplot</h1><p><span class="helptopic">multiple data</span></p><p>
+Plot y versus t in multiple windows.
+
+</p>
+<pre style="width: 90%%;" class="examples">
+MPLOT(y)
+MPLOT(y,&nbsp;n)
+MPLOT(y,&nbsp;n,&nbsp;{labels})
+</pre>
+<p>
+Where y is multicolumn data and first column is time.  n is a row vector
+specifying which variables to plot (1 is first data column, or y(:,2)).
+labels is a cell array of labels for the subplots.
+
+</p>
+<pre style="width: 90%%;" class="examples">
+MPLOT(t,&nbsp;y)
+MPLOT(t,&nbsp;y,&nbsp;n)
+MPLOT(t,&nbsp;y,&nbsp;{labels})
+</pre>
+<p>
+Where y is multicolumn data and t is time.  n is a row vector
+specifying which variables to plot (1 is first data column, or y(:,2)).
+labels is a cell array of labels for the subplots.
+
+</p>
+<pre style="width: 90%%;" class="examples">
+MPLOT(S)
+</pre>
+<p>
+Where S is a structure and one element 't' is assumed to be time.  Plot
+
+</p>
+<p>
+all other vectors versus time in subplots.  Subplots are labelled as per
+the data fields.
+
+</p>
+<hr>
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+  <tr class="subheader" valign="top"><td>&nbsp;</td></tr></table>
+<p class="copy">&copy; 1990-2012 Peter Corke.</p>
+</body></html>

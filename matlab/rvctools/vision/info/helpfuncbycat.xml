@@ -1,0 +1,253 @@
+<toc version="2.0">
+<tocitem target="contents_toc.html">Functions
+  <tocitem target="contents_toc.html#color">Color
+    <tocitem target="html/blackbody.html"><name>blackbody</name><purpose>Compute blackbody emission spectrum</purpose></tocitem>
+    <tocitem target="html/ccdresponse.html"><name>ccdresponse</name><purpose>CCD spectral response</purpose></tocitem>
+    <tocitem target="html/cie_primaries.html"><name>cie_primaries</name><purpose>Define CIE primary colors</purpose></tocitem>
+    <tocitem target="html/cmfrgb.html"><name>cmfrgb</name><purpose>RGB color matching function</purpose></tocitem>
+    <tocitem target="html/cmfxyz.html"><name>cmfxyz</name><purpose>matching function</purpose></tocitem>
+    <tocitem target="html/ccxyz.html"><name>ccxyz</name><purpose>XYZ chromaticity coordinates</purpose></tocitem>
+    <tocitem target="html/colordistance.html"><name>colordistance</name><purpose>Colorspace distance</purpose></tocitem>
+    <tocitem target="html/colorname.html"><name>colorname</name><purpose>Map between color names and RGB values</purpose></tocitem>
+    <tocitem target="html/colorspace.html"><name>colorspace</name><purpose>Color space conversion of image</purpose></tocitem>
+    <tocitem target="html/lambda2rg.html"><name>lambda2rg</name><purpose>RGB chromaticity coordinates</purpose></tocitem>
+    <tocitem target="html/lambda2xy.html"><name>lambda2xy</name><purpose>XY = LAMBDA2XY(LAMBDA) is the xy-chromaticity coordinate (1x2) for</purpose></tocitem>
+    <tocitem target="html/loadspectrum.html"><name>loadspectrum</name><purpose>Load spectrum data</purpose></tocitem>
+    <tocitem target="html/luminos.html"><name>luminos</name><purpose>Photopic luminosity function</purpose></tocitem>
+    <tocitem target="html/rg_addticks.html"><name>rg_addticks</name><purpose>Label spectral locus</purpose></tocitem>
+    <tocitem target="html/rgb2xyz.html"><name>rgb2xyz</name><purpose>RGB to XYZ color space</purpose></tocitem>
+    <tocitem target="html/rluminos.html"><name>rluminos</name><purpose>Relative photopic luminosity function</purpose></tocitem>
+    <tocitem target="html/tristim2cc.html"><name>tristim2cc</name><purpose>Tristimulus to chromaticity coordinates</purpose></tocitem>
+    <tocitem target="html/xycolorspace.html"><name>xycolorspace</name><purpose>Display spectral locus</purpose></tocitem>
+  </tocitem>
+  <tocitem target="contents_toc.html#cameramodels">Camera models
+    <tocitem target="html/Camera.html"><name>Camera</name><purpose>Camera superclass</purpose></tocitem>
+    <tocitem target="html/CentralCamera.html"><name>CentralCamera</name><purpose>Perspective camera class</purpose></tocitem>
+    <tocitem target="html/CatadioptricCamera.html"><name>CatadioptricCamera</name><purpose>Catadioptric camera class</purpose></tocitem>
+    <tocitem target="html/FishEyeCamera.html"><name>FishEyeCamera</name><purpose>Fish eye camera class</purpose></tocitem>
+    <tocitem target="html/SphericalCamera.html"><name>SphericalCamera</name><purpose>Spherical camera class</purpose></tocitem>
+    <tocitem target="html/camcald.html"><name>camcald</name><purpose>CAMCALD Camera calibration from data points</purpose></tocitem>
+    <tocitem target="html/invcamcal.html"><name>invcamcal</name><purpose>camera calibration</purpose></tocitem>
+  </tocitem>
+  <tocitem target="contents_toc.html#imagesources">Image sources
+  </tocitem>
+    <tocitem target="contents_toc.html#devices">Devices
+      <tocitem target="html/AxisWebCamera.html"><name>AxisWebCamera</name><purpose>acquire from internet webcam</purpose></tocitem>
+      <tocitem target="html/EarthView.html"><name>EarthView</name><purpose>acquire image from Google Earth</purpose></tocitem>
+      <tocitem target="html/ImageSource.html"><name>ImageSource</name><purpose>abstract superclass</purpose></tocitem>
+      <tocitem target="html/Movie.html"><name>Movie</name><purpose>acquire from a local movie file</purpose></tocitem>
+      <tocitem target="html/VideoCamera.html"><name>VideoCamera</name><purpose>acquire from attached video camera or webcam</purpose></tocitem>
+      <tocitem target="html/VideoCamera_IAT.html"><name>VideoCamera_IAT</name><purpose>Class to read from local video camera</purpose></tocitem>
+      <tocitem target="html/VideoCamera_fg.html"><name>VideoCamera_fg</name><purpose>Class to read from local video camera</purpose></tocitem>
+      <tocitem target="html/YUV.html"><name>YUV</name><purpose>Class to read YUV4MPEG file</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#testpatterns">Test patterns
+      <tocitem target="html/mkcube.html"><name>mkcube</name><purpose>Create cube</purpose></tocitem>
+      <tocitem target="html/mkgrid.html"><name>mkgrid</name><purpose>Create grid of points</purpose></tocitem>
+      <tocitem target="html/testpattern.html"><name>testpattern</name><purpose>Create test images</purpose></tocitem>
+    </tocitem>
+  <tocitem target="contents_toc.html#monadicoperators">Monadic operators
+    <tocitem target="html/icolor.html"><name>icolor</name><purpose>Colorize a greyscale image</purpose></tocitem>
+    <tocitem target="html/colorize.html"><name>colorize</name><purpose>Colorize a greyscale image</purpose></tocitem>
+    <tocitem target="html/igamma.html"><name>igamma</name><purpose>correction</purpose></tocitem>
+    <tocitem target="html/imono.html"><name>imono</name><purpose>Convert color image to monochrome</purpose></tocitem>
+    <tocitem target="html/inormhist.html"><name>inormhist</name><purpose>Histogram normalization</purpose></tocitem>
+    <tocitem target="html/istretch.html"><name>istretch</name><purpose>Image normalization</purpose></tocitem>
+  </tocitem>
+    <tocitem target="contents_toc.html#typechanging">Type changing
+      <tocitem target="html/idouble.html"><name>idouble</name><purpose>Convert integer image to double</purpose></tocitem>
+      <tocitem target="html/iint.html"><name>iint</name><purpose>Convert image to integer class</purpose></tocitem>
+    </tocitem>
+  <tocitem target="contents_toc.html#diadicoperators">Diadic operators
+    <tocitem target="html/ipixswitch.html"><name>ipixswitch</name><purpose>Pixelwise image merge</purpose></tocitem>
+  </tocitem>
+  <tocitem target="contents_toc.html#spatialoperators">Spatial operators
+  </tocitem>
+    <tocitem target="contents_toc.html#linearconvolution">Linear convolution
+      <tocitem target="html/icanny.html"><name>icanny</name><purpose>edge detection</purpose></tocitem>
+      <tocitem target="html/iconv.html"><name>iconv</name><purpose>Image convolution</purpose></tocitem>
+      <tocitem target="html/ismooth.html"><name>ismooth</name><purpose>Gaussian smoothing</purpose></tocitem>
+      <tocitem target="html/isobel.html"><name>isobel</name><purpose>Sobel edge detector</purpose></tocitem>
+      <tocitem target="html/radgrad.html"><name>radgrad</name><purpose>Radial gradient</purpose></tocitem>
+    </tocitem>
+      <tocitem target="contents_toc.html#kernels">Kernels
+        <tocitem target="html/kcircle.html"><name>kcircle</name><purpose>Circular structuring element</purpose></tocitem>
+        <tocitem target="html/kdgauss.html"><name>kdgauss</name><purpose>Derivative of Gaussian kernel</purpose></tocitem>
+        <tocitem target="html/kdog.html"><name>kdog</name><purpose>Difference of Gaussian kernel</purpose></tocitem>
+        <tocitem target="html/kgauss.html"><name>kgauss</name><purpose>Gaussian kernel</purpose></tocitem>
+        <tocitem target="html/klaplace.html"><name>klaplace</name><purpose>Laplacian kernel</purpose></tocitem>
+        <tocitem target="html/klog.html"><name>klog</name><purpose>Laplacian of Gaussian kernel</purpose></tocitem>
+        <tocitem target="html/ksobel.html"><name>ksobel</name><purpose>Sobel edge detector</purpose></tocitem>
+        <tocitem target="html/ktriangle.html"><name>ktriangle</name><purpose>Triangular kernel</purpose></tocitem>
+      </tocitem>
+    <tocitem target="contents_toc.html#non-linear">Non-linear
+      <tocitem target="html/dxform.html"><name>dxform</name><purpose>Distance transform navigation class</purpose></tocitem>
+      <tocitem target="html/irank.html"><name>irank</name><purpose>Rank filter</purpose></tocitem>
+      <tocitem target="html/ivar.html"><name>ivar</name><purpose>Pixel window statistics</purpose></tocitem>
+      <tocitem target="html/iwindow.html"><name>iwindow</name><purpose>Generalized spatial operator</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#morphological">Morphological
+      <tocitem target="html/idilate.html"><name>idilate</name><purpose>Morphological dilation</purpose></tocitem>
+      <tocitem target="html/ierode.html"><name>ierode</name><purpose>Morphological erosion</purpose></tocitem>
+      <tocitem target="html/iclose.html"><name>iclose</name><purpose>closing</purpose></tocitem>
+      <tocitem target="html/iopen.html"><name>iopen</name><purpose>Morphological opening</purpose></tocitem>
+      <tocitem target="html/imorph.html"><name>imorph</name><purpose>Morphological neighbourhood processing</purpose></tocitem>
+      <tocitem target="html/hitormiss.html"><name>hitormiss</name><purpose>Hit or miss transform</purpose></tocitem>
+      <tocitem target="html/ithin.html"><name>ithin</name><purpose>Morphological skeletonization</purpose></tocitem>
+      <tocitem target="html/iendpoint.html"><name>iendpoint</name><purpose>Find end points in a binary skeleton image</purpose></tocitem>
+      <tocitem target="html/itriplepoint.html"><name>itriplepoint</name><purpose>Find triple points</purpose></tocitem>
+      <tocitem target="html/morphdemo.html"><name>morphdemo</name><purpose>Demonstrate morphology using animation</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#similarity">Similarity
+      <tocitem target="html/imatch.html"><name>imatch</name><purpose>Template matching</purpose></tocitem>
+      <tocitem target="html/isimilarity.html"><name>isimilarity</name><purpose>Locate template in image</purpose></tocitem>
+      <tocitem target="html/sad.html"><name>sad</name><purpose>Sum of absolute differences</purpose></tocitem>
+      <tocitem target="html/ssd.html"><name>ssd</name><purpose>Sum of squared differences</purpose></tocitem>
+      <tocitem target="html/ncc.html"><name>ncc</name><purpose>Normalized cross correlation</purpose></tocitem>
+      <tocitem target="html/zsad.html"><name>zsad</name><purpose>Sum of absolute differences</purpose></tocitem>
+      <tocitem target="html/zssd.html"><name>zssd</name><purpose>Sum of squared differences</purpose></tocitem>
+      <tocitem target="html/zncc.html"><name>zncc</name><purpose>Normalized cross correlation</purpose></tocitem>
+    </tocitem>
+  <tocitem target="contents_toc.html#features">Features
+  </tocitem>
+    <tocitem target="contents_toc.html#regionfeatures">Region features
+      <tocitem target="html/RegionFeature.html"><name>RegionFeature</name><purpose>Region feature class</purpose></tocitem>
+      <tocitem target="html/colorkmeans.html"><name>colorkmeans</name><purpose>Color image segmentation by clustering</purpose></tocitem>
+      <tocitem target="html/colorseg.html"><name>colorseg</name><purpose>Color image segmentation using k-means</purpose></tocitem>
+      <tocitem target="html/ithresh.html"><name>ithresh</name><purpose>Interactive image threshold</purpose></tocitem>
+      <tocitem target="html/imoments.html"><name>imoments</name><purpose>Image moments</purpose></tocitem>
+      <tocitem target="html/ibbox.html"><name>ibbox</name><purpose>Find bounding box</purpose></tocitem>
+      <tocitem target="html/iblobs.html"><name>iblobs</name><purpose>features</purpose></tocitem>
+      <tocitem target="html/igraphseg.html"><name>igraphseg</name><purpose>Graph-based image segmentation</purpose></tocitem>
+      <tocitem target="html/ilabel.html"><name>ilabel</name><purpose>Label an image</purpose></tocitem>
+      <tocitem target="html/imser.html"><name>imser</name><purpose>Maximally stable extremal regions</purpose></tocitem>
+      <tocitem target="html/niblack.html"><name>niblack</name><purpose>Adaptive thresholding</purpose></tocitem>
+      <tocitem target="html/otsu.html"><name>otsu</name><purpose>Threshold selection</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#linefeatures">Line features
+      <tocitem target="html/Hough.html"><name>Hough</name><purpose>Hough transform class</purpose></tocitem>
+      <tocitem target="html/LineFeature.html"><name>LineFeature</name><purpose>Line feature class</purpose></tocitem>
+    </tocitem>
+      <tocitem target="contents_toc.html#pointfeatures">Point features
+        <tocitem target="html/PointFeature.html"><name>PointFeature</name><purpose>PointCorner feature object</purpose></tocitem>
+        <tocitem target="html/ScalePointFeature.html"><name>ScalePointFeature</name><purpose>ScalePointCorner feature object</purpose></tocitem>
+        <tocitem target="html/SiftPointFeature.html"><name>SiftPointFeature</name><purpose>SIFT point corner feature object</purpose></tocitem>
+        <tocitem target="html/SurfPointFeature.html"><name>SurfPointFeature</name><purpose>SURF point corner feature object</purpose></tocitem>
+        <tocitem target="html/icorner.html"><name>icorner</name><purpose>Corner detector</purpose></tocitem>
+        <tocitem target="html/iscalespace.html"><name>iscalespace</name><purpose>Scale-space image sequence</purpose></tocitem>
+        <tocitem target="html/iscalemax.html"><name>iscalemax</name><purpose>Scale space maxima</purpose></tocitem>
+        <tocitem target="html/isift.html"><name>isift</name><purpose>SIFT feature extractor</purpose></tocitem>
+        <tocitem target="html/isurf.html"><name>isurf</name><purpose>SURF feature extractor</purpose></tocitem>
+        <tocitem target="html/FeatureMatch.html"><name>FeatureMatch</name><purpose>Feature correspondence object</purpose></tocitem>
+      </tocitem>
+      <tocitem target="contents_toc.html#otherfeatures">Other features
+        <tocitem target="html/peak.html"><name>peak</name><purpose>Find peaks in vector</purpose></tocitem>
+        <tocitem target="html/peak2.html"><name>peak2</name><purpose>Find peaks in a matrix</purpose></tocitem>
+        <tocitem target="html/ihist.html"><name>ihist</name><purpose>Image histogram</purpose></tocitem>
+        <tocitem target="html/hist2d.html"><name>hist2d</name><purpose>MEX file to compute 2-D histogram.</purpose></tocitem>
+        <tocitem target="html/iprofile.html"><name>iprofile</name><purpose>Extract pixels along a line</purpose></tocitem>
+      </tocitem>
+  <tocitem target="contents_toc.html#multiview">Multiview
+  </tocitem>
+    <tocitem target="contents_toc.html#geometric">Geometric
+      <tocitem target="html/epidist.html"><name>epidist</name><purpose>Distance of point from epipolar line</purpose></tocitem>
+      <tocitem target="html/epiline.html"><name>epiline</name><purpose>Draw epipolar lines</purpose></tocitem>
+      <tocitem target="html/fmatrix.html"><name>fmatrix</name><purpose>Estimate fundamental matrix</purpose></tocitem>
+      <tocitem target="html/homography.html"><name>homography</name><purpose>Estimate homography</purpose></tocitem>
+    </tocitem>
+  <tocitem target="contents_toc.html#stereo">Stereo
+    <tocitem target="html/istereo.html"><name>istereo</name><purpose>Stereo matching</purpose></tocitem>
+    <tocitem target="html/anaglyph.html"><name>anaglyph</name><purpose>Convert stereo images to an anaglyph image</purpose></tocitem>
+    <tocitem target="html/stdisp.html"><name>stdisp</name><purpose>Display stereo pair</purpose></tocitem>
+    <tocitem target="html/irectify.html"><name>irectify</name><purpose>Rectify stereo image pair</purpose></tocitem>
+  </tocitem>
+  <tocitem target="contents_toc.html#imagesequence">Image sequence
+    <tocitem target="html/BagOfWords.html"><name>BagOfWords</name><purpose>Bag of words class</purpose></tocitem>
+    <tocitem target="html/ianimate.html"><name>ianimate</name><purpose>Display an image sequence</purpose></tocitem>
+    <tocitem target="html/Tracker.html"><name>Tracker</name><purpose>Track points in image sequence</purpose></tocitem>
+  </tocitem>
+  <tocitem target="contents_toc.html#shapechanging">Shape changing
+    <tocitem target="html/homwarp.html"><name>homwarp</name><purpose>Warp image by an homography</purpose></tocitem>
+    <tocitem target="html/idecimate.html"><name>idecimate</name><purpose>an image</purpose></tocitem>
+    <tocitem target="html/ipad.html"><name>ipad</name><purpose>Pad an image with constants</purpose></tocitem>
+    <tocitem target="html/ipyramid.html"><name>ipyramid</name><purpose>Pyramidal image decomposition</purpose></tocitem>
+    <tocitem target="html/ireplicate.html"><name>ireplicate</name><purpose>Expand image</purpose></tocitem>
+    <tocitem target="html/iroi.html"><name>iroi</name><purpose>Extract region of interest</purpose></tocitem>
+    <tocitem target="html/irotate.html"><name>irotate</name><purpose>Rotate image</purpose></tocitem>
+    <tocitem target="html/isamesize.html"><name>isamesize</name><purpose>Automatic image trimming</purpose></tocitem>
+    <tocitem target="html/iscale.html"><name>iscale</name><purpose>Scale an image</purpose></tocitem>
+    <tocitem target="html/itrim.html"><name>itrim</name><purpose>Trim images</purpose></tocitem>
+  </tocitem>
+  <tocitem target="contents_toc.html#utility">Utility
+  </tocitem>
+    <tocitem target="contents_toc.html#imageutility">Image utility
+      <tocitem target="html/idisp.html"><name>idisp</name><purpose>image display tool</purpose></tocitem>
+      <tocitem target="html/idisplabel.html"><name>idisplabel</name><purpose>Display an image with mask</purpose></tocitem>
+      <tocitem target="html/iread.html"><name>iread</name><purpose>Read image from file</purpose></tocitem>
+      <tocitem target="html/pnmfilt.html"><name>pnmfilt</name><purpose>Pipe image through PNM utility</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#imagegeneration">Image generation
+      <tocitem target="html/iconcat.html"><name>iconcat</name><purpose>Concatenate images</purpose></tocitem>
+      <tocitem target="html/iline.html"><name>iline</name><purpose>Draw a line in an image</purpose></tocitem>
+      <tocitem target="html/ipaste.html"><name>ipaste</name><purpose>Paste an image into an image</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#moments">Moments
+      <tocitem target="html/humoments.html"><name>humoments</name><purpose>Hu moments</purpose></tocitem>
+      <tocitem target="html/mpq.html"><name>mpq</name><purpose>Image moments</purpose></tocitem>
+      <tocitem target="html/mpq_poly.html"><name>mpq_poly</name><purpose>Polygon moments</purpose></tocitem>
+      <tocitem target="html/upq.html"><name>upq</name><purpose>Central image moments</purpose></tocitem>
+      <tocitem target="html/upq_poly.html"><name>upq_poly</name><purpose>Central polygon moments</purpose></tocitem>
+      <tocitem target="html/npq.html"><name>npq</name><purpose>Normalized central image moments</purpose></tocitem>
+      <tocitem target="html/npq_poly.html"><name>npq_poly</name><purpose>Normalized central polygon moments</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#plotting">Plotting
+      <tocitem target="html/plot_arrow.html"><name>plot_arrow</name><purpose>draw an arrow</purpose></tocitem>
+      <tocitem target="html/plot_box.html"><name>plot_box</name><purpose>draw a box</purpose></tocitem>
+      <tocitem target="html/plot_circle.html"><name>plot_circle</name><purpose>draw a circle</purpose></tocitem>
+      <tocitem target="html/plot_ellipse.html"><name>plot_ellipse</name><purpose>draw an ellipse</purpose></tocitem>
+      <tocitem target="html/plot_homline.html"><name>plot_homline</name><purpose>plot homogeneous line</purpose></tocitem>
+      <tocitem target="html/plot_point.html"><name>plot_point</name><purpose>plot points</purpose></tocitem>
+      <tocitem target="html/plot_poly.html"><name>plot_poly</name><purpose>plot polygon</purpose></tocitem>
+      <tocitem target="html/plot_sphere.html"><name>plot_sphere</name><purpose>draw a sphere</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#homogeneouscoordinates">Homogeneous coordinates
+      <tocitem target="html/e2h.html"><name>e2h</name><purpose>Euclidean coordinates to homogeneous</purpose></tocitem>
+      <tocitem target="html/h2e.html"><name>h2e</name><purpose>homogeneous coordinates to Euclidean</purpose></tocitem>
+      <tocitem target="html/homline.html"><name>homline</name><purpose></purpose></tocitem>
+      <tocitem target="html/homtrans.html"><name>homtrans</name><purpose>apply homogeneous transform to points</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#3d">3D
+      <tocitem target="html/icp.html"><name>icp</name><purpose>Point cloud alignment</purpose></tocitem>
+      <tocitem target="html/Plucker.html"><name>Plucker</name><purpose>Plucker coordinate class</purpose></tocitem>
+      <tocitem target="html/Ray3D.html"><name>Ray3D</name><purpose>Ray in 3D space</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#integralimage">Integral image
+      <tocitem target="html/iisum.html"><name>iisum</name><purpose>Sum of integral image</purpose></tocitem>
+      <tocitem target="html/intgimage.html"><name>intgimage</name><purpose>Compute integral image</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#edgerepresentation">Edge representation
+      <tocitem target="html/edgelist.html"><name>edgelist</name><purpose>Return list of edge pixels for region</purpose></tocitem>
+      <tocitem target="html/boundmatch.html"><name>boundmatch</name><purpose>Match boundary profiles</purpose></tocitem>
+    </tocitem>
+    <tocitem target="contents_toc.html#general">General
+      <tocitem target="html/about.html"><name>about</name><purpose>Compact display of variable type</purpose></tocitem>
+      <tocitem target="html/bresenham.html"><name>bresenham</name><purpose>Generate a line</purpose></tocitem>
+      <tocitem target="html/closest.html"><name>closest</name><purpose>Find closest points in N-dimensional space.</purpose></tocitem>
+      <tocitem target="html/colnorm.html"><name>colnorm</name><purpose>Column-wise norm of a matrix</purpose></tocitem>
+      <tocitem target="html/col2im.html"><name>col2im</name><purpose>Convert pixel vector to image</purpose></tocitem>
+      <tocitem target="html/distance.html"><name>distance</name><purpose>Euclidean distances between sets of points</purpose></tocitem>
+      <tocitem target="html/filt1d.html"><name>filt1d</name><purpose>1-dimensional rank filter</purpose></tocitem>
+      <tocitem target="html/im2col.html"><name>im2col</name><purpose>Convert an image to pixel per row format</purpose></tocitem>
+      <tocitem target="html/imeshgrid.html"><name>imeshgrid</name><purpose>Domain matrices for image</purpose></tocitem>
+      <tocitem target="html/iscolor.html"><name>iscolor</name><purpose>Test for color image</purpose></tocitem>
+      <tocitem target="html/isize.html"><name>isize</name><purpose>Size of image</purpose></tocitem>
+      <tocitem target="html/kmeans.html"><name>kmeans</name><purpose>K-means clustering</purpose></tocitem>
+      <tocitem target="html/polydiff.html"><name>polydiff</name><purpose>POLYDIFF       pd = polydiff(p)</purpose></tocitem>
+      <tocitem target="html/ransac.html"><name>ransac</name><purpose>Random sample and consensus</purpose></tocitem>
+      <tocitem target="html/zcross.html"><name>zcross</name><purpose>Zero-crossing detector</purpose></tocitem>
+      <tocitem target="html/xaxis.html"><name>xaxis</name><purpose>Set X-axis scaling</purpose></tocitem>
+      <tocitem target="html/yaxis.html"><name>yaxis</name><purpose>Y-axis scaling</purpose></tocitem>
+      <tocitem target="html/xyzlabel.html"><name>xyzlabel</name><purpose>Label X, Y and Z axes</purpose></tocitem>
+    </tocitem>
+</tocitem>
+</toc>
