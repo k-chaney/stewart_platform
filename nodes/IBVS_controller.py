@@ -45,9 +45,12 @@ class IBVS:
 
 		self.u0 = self.imageWidth/2
 		self.v0 = self.imageHeight/2
-		pixelChange = 100
+		#pixelChange = 100
 		#self.uv_Pstar = np.array([[self.u0-pixelChange ,self.v0-pixelChange ],[self.u0-pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0-pixelChange  ]])
-		self.uv_Pstar = np.array( [[ 220.,  140.],[ 220.,  340.],[ 420.,  340.],[ 420.,  140.]])
+		self.a = (self.focalLength * self.tgtEdge) / (2 * self.detPitchM * self.zOffset)
+		self.uv_Pstar = np.array( [[ self.u0 - self.a, self.v0 - self.a ],[ self.u0 - self.a, self.v0 + self.a],[ self.u0 + self.a, self.v0 + self.a ],[ self.u0 + self.a, self.v0 - self.a ]])
+		#self.uv_Pstar = np.array( [[ 220.,  140.],[ 220.,  340.],[ 420.,  340.],[ 420.,  140.]])
+		#print "uv_Pstar: ", self.uv_Pstar
 
 	def ik_feedback(self,msg):
 		self.bTh = np.dot(rpy2tr(msg.angular.x, msg.angular.y, msg.angular.z),transl(msg.linear.x, msg.linear.y, msg.linear.z))
@@ -100,6 +103,7 @@ class IBVS:
 		print  J
 		print pinv(J).shape, e.shape
 		v = self.lmbda * np.dot(pinv(J) , e )
+		print "v: ", v
 		Tdelta = trnorm(diff2tr(v))
 		print "Tdelta: ", Tdelta
 		bTc = trnorm(np.dot(self.bTh, self.hTc))
@@ -129,6 +133,7 @@ def visjac_p(f,u0,v0,rho, uv, Z):
 	x = (uv[0] - u0) * rho / f;
 	y = (uv[1] - v0) * rho / f;
 	#print x,y
+
 
 	L = np.array([[1/Z, 0, -x/Z, -(x*y), (1+(x*x)), -y],[0, 1/Z, -y/Z, -(1+(y*y)), x*y, x]])
 	L = -f * np.dot( np.diag(np.array([1/rho,1/rho])) , L)

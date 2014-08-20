@@ -34,8 +34,6 @@
 % along with RTB.  If not, see <http://www.gnu.org/licenses/>.
 
 function L = visjac_p(cam, uv, Z)
-    uv
-    Z
     if numcols(uv) > 1
         L = [];
         if length(Z) == 1
@@ -50,12 +48,12 @@ function L = visjac_p(cam, uv, Z)
     end
     
     % convert to normalized image-plane coordinates
-    x = (uv(1) - cam.u0) * cam.rho(1) / cam.f
-    y = (uv(2) - cam.v0) * cam.rho(2) / cam.f
+    x = (uv(1) - cam.u0) * cam.rho(1) / cam.f;
+    y = (uv(2) - cam.v0) * cam.rho(2) / cam.f;
 
     L = [
         1/Z, 0, -x/Z, -x*y, (1+x^2), -y
         0, 1/Z, -y/Z, -(1+y^2), x*y, x
-        ]
+        ];
 
-    L = -cam.f * diag(1./cam.rho) * L
+    L = -cam.f * diag(1./cam.rho) * L;

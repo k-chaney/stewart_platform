@@ -7,13 +7,13 @@ startup_rvc
 tgtEdge = 0.05  %meters
 circleRadius = 0.02 %meters
 
-zOffset = 0.25 %m (desired offset from target to camera:
+zOffset = 0.35 %m (desired offset from target to camera:
 
 %adjusting this scale changes running speed a lot...
 Scale = 0.5   %image resize scale
 
 %gain for IBVS:
-lambda = 0.3
+lambda = 0.02
 
 %configuration of the camera:
 focalLength = 6;        %mm
