@@ -116,7 +116,6 @@ class IBVS:
 		self.cur_twist.linear.z = xyz[2,0]
 		self.twist_pub.publish(self.cur_twist)
 
-
 def visjac_p(f,u0,v0,rho, uv, Z):
 	#print Z.shape
 	#print uv.shape
@@ -132,9 +131,8 @@ def visjac_p(f,u0,v0,rho, uv, Z):
 	#print x,y
 
 	L = np.array([[1/Z, 0, -x/Z, -(x*y), (1+(x*x)), -y],[0, 1/Z, -y/Z, -(1+(y*y)), x*y, x]])
-	L = -f * np.dot( np.diag(np.array([rho,rho])) , L)
+	L = -f * np.dot( np.diag(np.array([1/rho,1/rho])) , L)
 	return L
-
 
 
 def rotationMatrix(x,y,z):
