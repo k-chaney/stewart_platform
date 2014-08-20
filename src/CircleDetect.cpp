@@ -447,6 +447,21 @@ int main(int argc, char *argv[])
 
 		cout << "circles" << circles.size() << endl;
 
+		if ( saveFlag != 0 )
+		{
+			if (frameNum < 10) 
+				sprintf( filename, "%s_0000%d.jpg", prefix, frameNum ); 
+			else if (frameNum < 100)
+				sprintf( filename, "%s_000%d.jpg", prefix, frameNum ); 
+			else if (frameNum < 1000)
+				sprintf( filename, "%s_00%d.jpg", prefix, frameNum ); 
+			else if (frameNum < 10000)
+				sprintf( filename, "%s_0%d.jpg", prefix, frameNum ); 
+			else 
+				sprintf( filename, "%s_%d.jpg", prefix, frameNum ); 
+				cvSaveImage( filename, CapturedImage );
+
+		}
   		/// Draw the circles detected
   		for( size_t i = 0; i < circles.size(); i++ )
   		{
@@ -460,27 +475,6 @@ int main(int argc, char *argv[])
 	
 		imshow( "Captured Image", CapturedImageMat );
 	
-		if ( saveFlag != 0 )
-		{
-			if (frameNum < 10) 
-				sprintf( filename, "%s_0000%d.jpg", prefix, frameNum ); 
-			else if (frameNum < 100)
-				sprintf( filename, "%s_000%d.jpg", prefix, frameNum ); 
-			else if (frameNum < 1000)
-				sprintf( filename, "%s_00%d.jpg", prefix, frameNum ); 
-			else if (frameNum < 10000)
-				sprintf( filename, "%s_0%d.jpg", prefix, frameNum ); 
-			else 
-				sprintf( filename, "%s_%d.jpg", prefix, frameNum ); 
-	
-			if ( smallFlag !=0 ) {
-				cvSaveImage( filename, SmallImage );
-			}
-			else {
-				cvSaveImage( filename, CapturedImage );
-			}
-
-		}
 		
 		if( ( maxFrames > 0 ) && ( frameNum == maxFrames ))
 		{

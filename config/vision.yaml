@@ -16,7 +16,7 @@ camera:
     detPitch: 6.0
 
 processingScale: 2
-tgtEdge: 5.00
-circleRadius: 2.00
+tgtEdge: 0.05
+circleRadius: 0.02
 lambda: 0.02
 zOffset: 0.35

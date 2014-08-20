@@ -99,7 +99,7 @@ public:
     }
 
     //std::cout << "circles" << circles.size() << std::endl;
-
+    
 
     cv::imshow(WINDOW, cv_ptr->image);
     cv::waitKey(3);

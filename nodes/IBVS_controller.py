@@ -20,7 +20,7 @@ class IBVS:
 		self.imageWidth = rospy.get_param("camera/image_width")
 		self.imageHeight = rospy.get_param("camera/image_height")
 		self.detPitch = rospy.get_param("camera/detPitch")
-		self.detPitchM = float(self.detPitch) / 1000000
+		self.detPitchM = float(self.detPitch) / 1000000.0
 		self.sensorWidth = self.detPitchM*self.imageWidth
 		self.sensorHeight = self.detPitchM*self.imageHeight
 		self.processingScale = rospy.get_param("processingScale")
@@ -46,8 +46,8 @@ class IBVS:
 		self.u0 = self.imageWidth/2
 		self.v0 = self.imageHeight/2
 		pixelChange = 100
-		self.uv_Pstar = np.array([[self.u0-pixelChange ,self.v0-pixelChange ],[self.u0-pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0-pixelChange  ]])
-		#self.uv_Pstar = np.array( [[ 293.,  179.],[ 289.,  351.],[ 463.,  351.],[ 463.,  179.]])
+		#self.uv_Pstar = np.array([[self.u0-pixelChange ,self.v0-pixelChange ],[self.u0-pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0+pixelChange ],[ self.u0+pixelChange ,self.v0-pixelChange  ]])
+		self.uv_Pstar = np.array( [[ 220.,  140.],[ 220.,  340.],[ 420.,  340.],[ 420.,  140.]])
 
 	def ik_feedback(self,msg):
 		self.bTh = np.dot(rpy2tr(msg.angular.x, msg.angular.y, msg.angular.z),transl(msg.linear.x, msg.linear.y, msg.linear.z))
@@ -62,8 +62,8 @@ class IBVS:
 		x_c /= 4
 		y_c /= 4
 
-		uv_pxy_ordered = np.zeros((4,2))
-		uv_radii_ordered = np.zeros(4)
+		uv_pxy_ordered = np.zeros((4,2),dtype=np.float64)
+		uv_radii_ordered = np.zeros(4,dtype=np.float64)
 		for Pt in range(0,4):
 			if ((msg.data[Pt*3] < x_c) and (msg.data[Pt*3+1] < y_c)):
 				uv_pxy_ordered[0][0] = msg.data[Pt*3]
@@ -87,23 +87,27 @@ class IBVS:
 
 		for Pt in range(0,4):
 			zEst[Pt] = (self.circleRadius*self.focalLength)/(uv_radii_ordered[Pt]*self.detPitchM) # this shindig helps preserve being able to calculate everything
-		print zEst
+		print "zEst:", zEst
 		#print self.uv_Pstar
 		e = self.uv_Pstar - uv_pxy_ordered
 		e = np.concatenate(e)
-		#print e
-		#print e
+		print "e: ", e
 		J = visjac_p(self.focalLength,self.u0,self.v0,self.detPitchM,uv_pxy_ordered,zEst)
-
+		print self.focalLength
+		print self.u0
+		print self.v0
+		print self.detPitchM
+		print  J
+		print pinv(J).shape, e.shape
 		v = self.lmbda * np.dot(pinv(J) , e )
 		Tdelta = trnorm(diff2tr(v))
-		print Tdelta
+		print "Tdelta: ", Tdelta
 		bTc = trnorm(np.dot(self.bTh, self.hTc))
 		bTcStar = trnorm(np.dot(bTc, Tdelta))
 		bThStar = trnorm(np.dot(bTcStar, self.cTh))
 		rpy = tr2rpy(bThStar)
 		xyz = transl(bThStar) #[bThStar[0,2],bThStar[1,2],bThStar[2,2]]
-		print xyz.shape
+		#print xyz.shape
 		self.cur_twist.angular.x = rpy[0,0]
 		self.cur_twist.angular.y = rpy[0,1]
 		self.cur_twist.angular.z = rpy[0,2]
@@ -121,15 +125,14 @@ def visjac_p(f,u0,v0,rho, uv, Z):
 		for i in range(1,uv.shape[0]):
 			L = np.vstack( [L, visjac_p(f,u0,v0,rho, uv[i], Z[i]) ] );
 		return L
-
+	print uv
 	# convert to normalized image-plane coordinates
 	x = (uv[0] - u0) * rho / f;
 	y = (uv[1] - v0) * rho / f;
 	#print x,y
 
-	L = np.array([[1/Z, 0, -x/Z, -x*y, (1+x*x), -y],[0, 1/Z, -y/Z, -(1+y*y), x*y, x]])
-	#print max([1/Z, 0, -x/Z, -x*y, (1+x*x), -y,0, 1/Z, -y/Z, -(1+y*y), x*y, x])*f
-	L = -f * np.dot( np.diag(np.array([rho,rho])) , L) # again dealing with self.detPitchM being 0
+	L = np.array([[1/Z, 0, -x/Z, -(x*y), (1+(x*x)), -y],[0, 1/Z, -y/Z, -(1+(y*y)), x*y, x]])
+	L = -f * np.dot( np.diag(np.array([rho,rho])) , L)
 	return L
 
 
