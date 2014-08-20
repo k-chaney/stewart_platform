@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera
+END
+visjac_l.m
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/visjac_l.m
+END
+flowfield.m
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/flowfield.m
+END
+visjac_p_polar.m
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/visjac_p_polar.m
+END
+visjac_p.m
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/visjac_p.m
+END
+CentralCamera.m
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/928/matlab/vision/trunk/@CentralCamera/CentralCamera.m
+END
+estpose.m
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/estpose.m
+END
+visjac_e.m
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/visjac_e.m
+END

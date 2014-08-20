@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/765/matlab/vision/trunk/mex
+END
+imorph.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/917/matlab/vision/trunk/mex/imorph.c
+END
+ivar.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/917/matlab/vision/trunk/mex/ivar.c
+END
+irank.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/917/matlab/vision/trunk/mex/irank.c
+END
+imatch.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/723/matlab/vision/trunk/mex/imatch.c
+END
+edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/917/matlab/vision/trunk/mex/edge.h
+END
+framegrabber_firewire.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/723/matlab/vision/trunk/mex/framegrabber_firewire.c
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/723/matlab/vision/trunk/mex/README
+END
+closest.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/723/matlab/vision/trunk/mex/closest.c
+END
+stereo_match.c
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/723/matlab/vision/trunk/mex/stereo_match.c
+END
+fhist.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/723/matlab/vision/trunk/mex/fhist.c
+END
+camera_ops.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/723/matlab/vision/trunk/mex/camera_ops.h
+END
+iwindow.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/917/matlab/vision/trunk/mex/iwindow.c
+END
+framegrabber_qtkit.mm
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/723/matlab/vision/trunk/mex/framegrabber_qtkit.mm
+END
+firewire.m
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/723/matlab/vision/trunk/mex/firewire.m
+END
+make.m
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/723/matlab/vision/trunk/mex/make.m
+END
+ilabel.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/723/matlab/vision/trunk/mex/ilabel.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/896/matlab/vision/trunk/mex/Makefile
+END
+hist2d.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/765/matlab/vision/trunk/mex/hist2d.c
+END

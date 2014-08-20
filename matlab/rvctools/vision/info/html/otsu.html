@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="http://www.petercorke.com/RVC/common/toolboxhelp.css">
+    <title>M-File Help: otsu</title>
+  </head>
+  <body>
+  <table border="0" cellspacing="0" width="100%">
+    <tr class="subheader">
+      <td class="headertitle">M-File Help: otsu</td>
+      <td class="subheader-left"><a href="matlab:open otsu">View code for otsu</a></td>
+    </tr>
+  </table>
+<h1>otsu</h1><p><span class="helptopic">Threshold selection</span></p><p>
+<strong>T</strong> = <span style="color:red">otsu</span>(<strong>im</strong>) is an optimal threshold for binarizing an image with a bimodal
+intensity histogram.  <strong>T</strong> is a scalar threshold that maximizes the variance
+between the classes of pixels below and above the thresold <strong>T</strong>.
+
+</p>
+<h2>Example</h2>
+<pre style="width: 90%%;" class="examples">
+t&nbsp;=&nbsp;otsu(im);
+idisp(im&nbsp;>=&nbsp;t);
+</pre>
+<h2>Notes</h2>
+<ul>
+  <li>Performance for images with non-bimodal histograms can be quite poor.</li>
+</ul>
+<h2>Reference</h2>
+<p>
+A Threshold Selection Method from Gray-Level Histograms,
+N. <span style="color:red">otsu</span>
+IEEE Trans. Systems, Man and Cybernetics
+Vol SMC-9(1), Jan 1979, pp 62-66
+
+</p>
+<h2>See also</h2>
+<p>
+<a href="matlab:doc niblack">niblack</a>, <a href="matlab:doc ithresh">ithresh</a></p>
+<hr>
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+  <tr class="subheader" valign="top"><td>&nbsp;</td></tr></table>
+<p class="copy">&copy; 1990-2012 Peter Corke.</p>
+</body></html>

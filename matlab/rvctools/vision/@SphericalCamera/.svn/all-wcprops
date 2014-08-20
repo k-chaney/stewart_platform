@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/723/matlab/vision/trunk/@SphericalCamera
+END
+plot_camera.m
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/723/matlab/vision/trunk/@SphericalCamera/plot_camera.m
+END
+showpose.m
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/723/matlab/vision/trunk/@SphericalCamera/showpose.m
+END
+sph.m
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/723/matlab/vision/trunk/@SphericalCamera/sph.m
+END
+scamera.m
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/723/matlab/vision/trunk/@SphericalCamera/scamera.m
+END
+sph2.m
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/723/matlab/vision/trunk/@SphericalCamera/sph2.m
+END
+visjac_p.m
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/723/matlab/vision/trunk/@SphericalCamera/visjac_p.m
+END
+SphericalCamera.m
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/723/matlab/vision/trunk/@SphericalCamera/SphericalCamera.m
+END

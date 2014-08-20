@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private
+END
+compute_rho.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_rho.m
+END
+dist2.m
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/dist2.m
+END
+compute_norm_sign_scaling_factor.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_norm_sign_scaling_factor.m
+END
+compute_M_ver2.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_M_ver2.m
+END
+invhomog.m
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/invhomog.m
+END
+define_control_points.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/define_control_points.m
+END
+reprojection_error_usingRT.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/reprojection_error_usingRT.m
+END
+getrotT.m
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/getrotT.m
+END
+sign_determinant.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/sign_determinant.m
+END
+compute_A_and_b_Gauss_Newton.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_A_and_b_Gauss_Newton.m
+END
+compute_permutation_constraint4.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_permutation_constraint4.m
+END
+define_distances_btw_control_points.m
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/define_distances_btw_control_points.m
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/README
+END
+compute_alphas.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_alphas.m
+END
+compute_constraint_distance_2param_6eq_3unk.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_constraint_distance_2param_6eq_3unk.m
+END
+efficient_pnp.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/efficient_pnp.m
+END
+optimize_betas_gauss_newton.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/optimize_betas_gauss_newton.m
+END
+compute_constraint_distance_3param_6eq_6unk.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_constraint_distance_3param_6eq_6unk.m
+END
+efficient_pnp_gauss.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/efficient_pnp_gauss.m
+END
+compute_constraint_distance_orthog_4param_9eq_10unk.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_constraint_distance_orthog_4param_9eq_10unk.m
+END
+gauss_newton.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/gauss_newton.m
+END
+kernel_noise.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/kernel_noise.m
+END
+compute_L6_10.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/723/matlab/vision/trunk/@CentralCamera/private/compute_L6_10.m
+END
