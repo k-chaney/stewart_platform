@@ -13,10 +13,10 @@ zOffset = 0.35 %m (desired offset from target to camera:
 Scale = 0.5   %image resize scale
 
 %gain for IBVS:
-lambda = 0.02
+lambda = 0.2
 
 %configuration of the camera:
-focalLength = 6;        %mm
+focalLength = 1.8;        %mm
 frameSize = [640 480];  %H and V detectors
 detPitch = 6;           %microns on each side (square)
 detPitchm = detPitch / 1000000     %meters

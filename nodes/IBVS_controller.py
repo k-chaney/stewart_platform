@@ -84,14 +84,14 @@ class IBVS:
 				uv_pxy_ordered[3][0] = msg.data[Pt*3]
 				uv_pxy_ordered[3][1] = msg.data[Pt*3+1]
 				uv_radii_ordered[3] = msg.data[Pt*3+2]
-		#print uv_pxy_ordered
-		#print uv_radii_ordered
+#		print "uv_pxy_ordered: ", uv_pxy_ordered
+#		print uv_radii_ordered
 		zEst = np.zeros(uv_radii_ordered.shape)
 
 		for Pt in range(0,4):
 			zEst[Pt] = (self.circleRadius*self.focalLength)/(uv_radii_ordered[Pt]*self.detPitchM)
 #		print "zEst:", zEst
-		#print self.uv_Pstar
+#		print self.uv_Pstar
 		e = self.uv_Pstar - uv_pxy_ordered
 		e = np.concatenate(e)
 #		print "e: ", e
@@ -104,7 +104,7 @@ class IBVS:
 #		print pinv(J).shape, e.shape
 		v = self.lmbda * np.dot(pinv(J) , e )
 #		print "v: ", v
-		Tdelta = trnorm(diff2tr(v))
+		Tdelta = trnorm(delta2tr(v))
 		print "Tdelta: ", Tdelta
 		bTc = trnorm(np.dot(self.bTh, self.hTc))
 		bTcStar = trnorm(np.dot(bTc, Tdelta))
@@ -138,6 +138,12 @@ def visjac_p(f,u0,v0,rho, uv, Z):
 	L = np.array([[1/Z, 0, -x/Z, -(x*y), (1+(x*x)), -y],[0, 1/Z, -y/Z, -(1+(y*y)), x*y, x]])
 	L = -f * np.dot( np.diag(np.array([1/rho,1/rho])) , L)
 	return L
+
+def delta2tr(d):
+    return mat([[1,	-d[5],	d[4],	d[0]],\
+                [d[5], 	1,  	-d[3],  d[1]],\
+                [-d[4],	d[3], 	1,	d[2]],\
+                [0,    	0,    	0,    	1]])
 
 
 def rotationMatrix(x,y,z):
