@@ -1,0 +1,40 @@
+<launch>
+  <!-- All vision parameters -->
+  <rosparam command="load" file="$(find stewart_platform)/config/vision.yaml" />
+  <rosparam command="load" file="$(find stewart_platform)/config/platformModel.yaml" />
+  <rosparam command="load" file="$(find stewart_platform)/config/servoConfig.yaml" />
+
+
+  <!-- nodelet manager process -->
+  <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager"
+        args="manager" />
+
+  <!-- camera driver nodelet -->
+  <node pkg="nodelet" type="nodelet" name="camera1394_nodelet"
+        args="load camera1394/driver camera_nodelet_manager">
+        <!-- Needs it again here so that it's read directly into the nodelet (will if if I get a chance) -->
+        <rosparam file="$(find stewart_platform)/config/vision.yaml" />
+  </node>
+
+  <!-- Bayer color decoding -->
+  <node pkg="nodelet" type="nodelet" name="image_proc_debayer"
+        args="load image_proc/debayer camera_nodelet_manager">
+    <remap from="image_color" to="camera/image_color" />
+    <remap from="image_mono" to="camera/image_mono" />
+    <remap from="image_raw" to="camera/image_raw" />
+  </node>
+
+  <!-- Image Proc Node -->
+  <node pkg="stewart_platform" type="CircleDetect" name="CircleDetect" output="screen">
+	 <remap from="in" to="camera/image_color" />
+	 <remap from="out" to="circle_image" />
+   <remap from="circle_data" to="/tracker/circle_data" />
+  </node>
+
+
+  <node pkg="stewart_platform" type="stewart_ik.py" name="stewart_platform_ik" output="screen" />
+  <node pkg="stewart_platform" type="stewart_move_servos.py" name="stewart_servo_controller" output="screen" />
+
+ <!-- Visual Jacobian Node and Controller -->
+  <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" output="screen" />
+</launch>

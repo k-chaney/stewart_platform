@@ -113,7 +113,7 @@ public:
     int p2 = 0;
     int p3 = 0;
     int p4 = 0;
-    if (numCircles>4 && numCircles<10 && minEllipse.size()<25)
+    if (numCircles>4 && numCircles<20 && minEllipse.size()<35) // culls out larger data sets
     {
       bool flag = false;
       for (int i = 0; i<minEllipse.size();i++)
@@ -126,10 +126,10 @@ public:
             {
               if (circleMask[j])
               {
-                if (abs(minEllipse[i].size.height-minEllipse[j].size.height) < 50)
+                if (abs(minEllipse[i].size.height-minEllipse[j].size.height) < 25)
                 {
                     distances.push_back(ImageConverter::Distance(minEllipse[i].center.x,minEllipse[i].center.y,minEllipse[j].center.x,minEllipse[j].center.y)); // calculates distance between points
-                    if (distances.back()<100)
+                    if (distances.back()<10)
                     {
                       distances.back() = 0.0;
                     }
@@ -171,6 +171,27 @@ public:
                               cv::ellipse( cv_ptr->image, minEllipse[p2], color, 2, 8 );
                               cv::ellipse( cv_ptr->image, minEllipse[p3], color, 2, 8 );
                               cv::ellipse( cv_ptr->image, minEllipse[p4], color, 2, 8 );
+
+
+                              int j=0;
+                              circle_data.data[3*j]=minEllipse[p1].center.x;
+                              circle_data.data[3*j+1]=minEllipse[p1].center.y;
+                              circle_data.data[3*j+2]=minEllipse[p1].size.height;
+                              j++;
+                              circle_data.data[3*j]=minEllipse[p2].center.x;
+                              circle_data.data[3*j+1]=minEllipse[p2].center.y;
+                              circle_data.data[3*j+2]=minEllipse[p2].size.height;
+                              j++;
+                              circle_data.data[3*j]=minEllipse[p3].center.x;
+                              circle_data.data[3*j+1]=minEllipse[p3].center.y;
+                              circle_data.data[3*j+2]=minEllipse[p3].size.height;
+                              j++;
+                              circle_data.data[3*j]=minEllipse[p4].center.x;
+                              circle_data.data[3*j+1]=minEllipse[p4].center.y;
+                              circle_data.data[3*j+2]=minEllipse[p4].size.height;
+                              circle_pub.publish(circle_data);
+
+
 
                               flag = true;
                               break;
@@ -214,23 +235,6 @@ public:
     //   }
     //   circle_pub.publish(circle_data);
     // }
-      int j=0;
-      circle_data.data[3*j]=minEllipse[p1].center.x;
-      circle_data.data[3*j+1]=minEllipse[p1].center.y;
-      circle_data.data[3*j+2]=minEllipse[p1].size.height;
-      j++;
-      circle_data.data[3*j]=minEllipse[p2].center.x;
-      circle_data.data[3*j+1]=minEllipse[p2].center.y;
-      circle_data.data[3*j+2]=minEllipse[p2].size.height;
-      j++;
-      circle_data.data[3*j]=minEllipse[p3].center.x;
-      circle_data.data[3*j+1]=minEllipse[p3].center.y;
-      circle_data.data[3*j+2]=minEllipse[p3].size.height;
-      j++;
-      circle_data.data[3*j]=minEllipse[p4].center.x;
-      circle_data.data[3*j+1]=minEllipse[p4].center.y;
-      circle_data.data[3*j+2]=minEllipse[p4].size.height;
-      circle_pub.publish(circle_data);
 
 
     /// Draw the circles detected
