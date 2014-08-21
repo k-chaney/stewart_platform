@@ -3,7 +3,7 @@
   <rosparam command="load" file="$(find stewart_platform)/config/vision.yaml" />
 
   <!-- Image Proc Node -->
-  <node pkg="stewart_platform" type="CircleDetect" name="CircleDetect">
+  <node pkg="stewart_platform" type="CircleDetect" name="CircleDetect" output="screen">
 	 <remap from="in" to="single_image" />
 	 <remap from="out" to="circle_image" />
    <remap from="circle_data" to="/tracker/circle_data" />

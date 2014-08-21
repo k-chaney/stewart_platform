@@ -89,21 +89,21 @@ class IBVS:
 		zEst = np.zeros(uv_radii_ordered.shape)
 
 		for Pt in range(0,4):
-			zEst[Pt] = (self.circleRadius*self.focalLength)/(uv_radii_ordered[Pt]*self.detPitchM) # this shindig helps preserve being able to calculate everything
-		print "zEst:", zEst
+			zEst[Pt] = (self.circleRadius*self.focalLength)/(uv_radii_ordered[Pt]*self.detPitchM)
+#		print "zEst:", zEst
 		#print self.uv_Pstar
 		e = self.uv_Pstar - uv_pxy_ordered
 		e = np.concatenate(e)
-		print "e: ", e
+#		print "e: ", e
 		J = visjac_p(self.focalLength,self.u0,self.v0,self.detPitchM,uv_pxy_ordered,zEst)
-		print self.focalLength
-		print self.u0
-		print self.v0
-		print self.detPitchM
-		print  J
-		print pinv(J).shape, e.shape
+#		print self.focalLength
+#		print self.u0
+#		print self.v0
+#		print self.detPitchM
+#		print  J
+#		print pinv(J).shape, e.shape
 		v = self.lmbda * np.dot(pinv(J) , e )
-		print "v: ", v
+#		print "v: ", v
 		Tdelta = trnorm(diff2tr(v))
 		print "Tdelta: ", Tdelta
 		bTc = trnorm(np.dot(self.bTh, self.hTc))
@@ -128,7 +128,7 @@ def visjac_p(f,u0,v0,rho, uv, Z):
 		for i in range(1,uv.shape[0]):
 			L = np.vstack( [L, visjac_p(f,u0,v0,rho, uv[i], Z[i]) ] );
 		return L
-	print uv
+	#print uv
 	# convert to normalized image-plane coordinates
 	x = (uv[0] - u0) * rho / f;
 	y = (uv[1] - v0) * rho / f;
