@@ -105,19 +105,26 @@ class IBVS:
 		v = self.lmbda * np.dot(pinv(J) , e )
 #		print "v: ", v
 		Tdelta = trnorm(delta2tr(v))
-		print "Tdelta: ", Tdelta
+#		print "Tdelta: ", Tdelta
 		bTc = trnorm(np.dot(self.bTh, self.hTc))
+#		print "bTh: ", self.bTh
+#		print "bTc: ", bTc
 		bTcStar = trnorm(np.dot(bTc, Tdelta))
+#		print "bTcStar: ", bTcStar
 		bThStar = trnorm(np.dot(bTcStar, self.cTh))
-		rpy = tr2rpy(bThStar)
-		xyz = transl(bThStar) #[bThStar[0,2],bThStar[1,2],bThStar[2,2]]
-		#print xyz.shape
-		self.cur_twist.angular.x = rpy[0,0]
-		self.cur_twist.angular.y = rpy[0,1]
-		self.cur_twist.angular.z = rpy[0,2]
-		self.cur_twist.linear.x = xyz[0,0]
-		self.cur_twist.linear.y = xyz[1,0]
-		self.cur_twist.linear.z = xyz[2,0]
+#		print "bThStar: ", bThStar
+		#rpy = tr2rpy(bThStar)
+		#xyz = transl(bThStar) #[bThStar[0,2],bThStar[1,2],bThStar[2,2]]
+		#print xyz, rpy
+		twist = tr2delta(bThStar)
+#		print "twist: ", twist
+
+		self.cur_twist.angular.x = twist[3]
+		self.cur_twist.angular.y = twist[4]
+		self.cur_twist.angular.z = twist[5]
+		self.cur_twist.linear.x = twist[0]
+		self.cur_twist.linear.y = twist[1]
+		self.cur_twist.linear.z = twist[2]
 		self.twist_pub.publish(self.cur_twist)
 
 def visjac_p(f,u0,v0,rho, uv, Z):
@@ -145,6 +152,9 @@ def delta2tr(d):
                 [-d[4],	d[3], 	1,	d[2]],\
                 [0,    	0,    	0,    	1]])
 
+def tr2delta(t):
+    #print "t.shape: ",t.shape
+    return [t[0,3], t[1,3], t[2,3], t[2,1], t[0,2], t[1,0]]
 
 def rotationMatrix(x,y,z):
 	M = np.dot( np.identity(3), np.array( [[1,0,0],[0,cos(x),-sin(x)],[0,sin(x),cos(x)] ] ) ) # angle x
