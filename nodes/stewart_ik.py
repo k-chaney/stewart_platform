@@ -30,6 +30,7 @@ class stewart_platform:
 		self.pos_base = np.zeros((6,3))
 		self.pos_top = np.zeros((6,3))
 		shiftDict = {0:1,1:2,2:3,3:4,4:5,5:0}
+
 		for i in range (1,4): # 1,2,3
 			# base points
 			angle_m_b = (2*pi/3)* (i-1) - self.alpha_b
@@ -48,9 +49,10 @@ class stewart_platform:
 			#robot = {pos_top pos_base angle_base L_m L_s Theta_min Theta_max title_str};
 
 		print self.pos_top
-
 		# some ros stuff
 		self.angle_base = self.angle_base + pi/2
+		print self.angle_base
+		print self.pos_base
 		self.curTwist = Twist()
 		rospy.init_node("stewart_platform")
 		self.joint_pub = rospy.Publisher('/stewart/JointState',JointState)
@@ -73,9 +75,9 @@ class stewart_platform:
 		a = twist[3]
 		platform_pose = np.dot( self.pos_top, np.array( [[1,0,0],[0,cos(a),-sin(a)],[0,sin(a),cos(a)] ] ) ) # angle x
 		a = twist[4]
-		platform_pose = np.dot( self.pos_top, np.array( [[cos(a),0,sin(a)],[0,1,0],[-sin(a),0,cos(a)] ] ) ) # angle y
+		platform_pose = np.dot( platform_pose, np.array( [[cos(a),0,sin(a)],[0,1,0],[-sin(a),0,cos(a)] ] ) ) # angle y
 		a = twist[5]
-		platform_pose = np.dot( self.pos_top, np.array( [[cos(a),-sin(a),0],[sin(a),cos(a),0],[0,0,1] ] ) ) # angle z
+		platform_pose = np.dot( platform_pose, np.array( [[cos(a),-sin(a),0],[sin(a),cos(a),0],[0,0,1] ] ) ) # angle z
 		platform_pose[:,0] = platform_pose[:,0] + twist[0] # translate x
 		platform_pose[:,1] = platform_pose[:,1] + twist[1] # translate y
 		platform_pose[:,2] = platform_pose[:,2] + twist[2] # translate z
@@ -103,6 +105,7 @@ class stewart_platform:
 			except:
 				self.joint_positions[i] = 0
 				pass
+		print self.joint_positions
 		if success==6:
 			self.stewart_joints.position = self.joint_positions
 			self.joint_pub.publish(self.stewart_joints)

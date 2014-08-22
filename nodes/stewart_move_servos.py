@@ -16,17 +16,18 @@ class servo_controller:
 		parityDict = {'n':serial.PARITY_NONE,'e':serial.PARITY_EVEN,'o':serial.PARITY_ODD,'m':serial.PARITY_MARK,'s':serial.PARITY_SPACE}
 		stopDict = {1:serial.STOPBITS_ONE,15:serial.STOPBITS_ONE_POINT_FIVE,2:serial.STOPBITS_TWO}
 		dataDict = {5:serial.FIVEBITS,6:serial.SIXBITS,7:serial.SEVENBITS,8:serial.EIGHTBITS}
-		# the actual controller for the Pololu Maestro
+		# # the actual controller for the Pololu Maestro
 		self.controller = serial.Serial(port=params['port'],baudrate=params['baud'],parity=parityDict[params['parity']],stopbits=stopDict[params['stopBits']])
-		# Stuff that I was told to pout in.....not sure why
+		# # Stuff that I was told to pout in.....not sure why
 		self.controller.write(chr(0xAA))
 		self.controller.flush()
 		# initial goal position is zeros
 		self.goalPositions = np.zeros(6)
 
 	def writeNextPos(self,positions):
+		print positions
 		for i in range(0,len(positions)):
-			self.controller.write(self.get_command(i,positions[i]*10.5 + 1500))
+			self.controller.write(self.get_command(i+1,positions[i]*10.5 + 1500))
 
 	def get_command(self,channel, target):
 		target = int(min(2400,max(600,target))) # sanatize the input of the inputs
@@ -37,10 +38,14 @@ class servo_controller:
 
 	def writeGoal(self,msg):
 		degreeShift = -45
-		rev_mask = np.array( [1, 1, -1, -1, -1, 1] )
-		self.goalPositions = np.multiply( ( (np.array( msg.position )*180/3.1415)+degreeShift),rev_mask)
+		rev_mask = np.array( [1, -1, -1, -1, 1, 1] )
+		self.goalPositions = (np.array( msg.position )*180/3.1415)+degreeShift
+		for i in range(0,6):
+			self.goalPositions[i] = (self.goalPositions[i]*rev_mask[i])
+		self.goalPositions = np.array(self.goalPositions)
+		print self.goalPositions
 		print "Servo (DEGREES): " , self.goalPositions.astype(int)
-		self.writeNextPos(self.goalPositions.astype(int))
+		self.writeNextPos(self.goalPositions)
 
 if __name__ == '__main__':
 	rospy.init_node('servo_controller')
