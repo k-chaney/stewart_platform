@@ -10,7 +10,7 @@ use_ros_time: true
 video_mode: format7_mode0
 
 camera:
-    focal_length: 1.80
+    focal_length: 4.00
     image_width: 640
     image_height: 480
     detPitch: 6.0
@@ -18,5 +18,5 @@ camera:
 processingScale: 2
 tgtEdge: 0.05
 circleRadius: 0.02
-lambda: 0.2
-zOffset: 0.35
+lambda: 0.05
+zOffset: 0.5

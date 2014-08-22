@@ -53,7 +53,8 @@ class IBVS:
 		#print "uv_Pstar: ", self.uv_Pstar
 
 	def ik_feedback(self,msg):
-		self.bTh = np.dot(rpy2tr(msg.angular.x, msg.angular.y, msg.angular.z),transl(msg.linear.x, msg.linear.y, msg.linear.z))
+		self.bTh = delta2tr(np.array([msg.linear.x, msg.linear.y, msg.linear.z,msg.angular.x, msg.angular.y, msg.angular.z]))
+		#self.bTh = delta2tr(np.array([0, msg.linear.y, 0.25,0, 0, 0]))
 
 	def circle_track(self,msg):
 		#print msg
