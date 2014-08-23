@@ -1,0 +1,46 @@
+joy_hz: 60.000
+step_size: 0.001
+x360:
+    axes:
+        x: 3
+        y: 4
+        z: 1
+        yaw: 0
+        lt: 2
+        rt: 5
+        h_dpad: 6
+        v_dpad: 7
+    buttons:
+        start: 7
+        connect: 8
+        back: 6
+        a: 0
+        b: 1
+        x: 2
+        y: 3
+        rb: 5
+        lb: 4
+        lj: 9
+        rj: 10
+x360_dir_mask:
+    axes:
+        x: -1
+        y: 1
+        z: 1
+        yaw: -1
+        lt: 1
+        rt: 1
+        h_dpad: -1
+        v_dpad: 1
+    buttons:
+        start: 1
+        connect: 1
+        back: 1
+        a: 1
+        b: 1
+        x: 1
+        y: 1
+        rb: 1
+        lb: 1
+        lj: 1
+        rj: 1

@@ -32,9 +32,19 @@
   </node>
 
 
-  <node pkg="stewart_platform" type="stewart_ik.py" name="stewart_platform_ik" output="screen" />
+ <!-- Visual Jacobian Node and Controller -->
+  <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" output="screen">
+   <remap from="/IBVS/Twist" to="/IK/Twist" />
+  </node>
+
+
+
+  <node pkg="stewart_platform" type="stewart_ik.py" name="stewart_platform_ik" output="screen" >
+   <remap from="/IK/JointState" to="/stewart/JointState" />
+   <remap from="/IK/Twist_Feedback" to="/IBVS/Twist_Feedback" />
+  </node>
+
   <node pkg="stewart_platform" type="stewart_move_servos.py" name="stewart_servo_controller" output="screen" />
 
- <!-- Visual Jacobian Node and Controller -->
-  <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" output="screen" />
+
 </launch>

@@ -25,9 +25,12 @@
   <node pkg="stewart_platform" type="CircleDetect" name="CircleDetect" output="screen">
 	 <remap from="in" to="camera/image_color" />
 	 <remap from="out" to="circle_image" />
-   <remap from="circle_data" to="/tracker/circle_data" />
+   <remap from="circle_data" to="/IBVS/circle_data" />
   </node>
+
   <!-- Visual Jacobian Node and Controller -->
-  <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" output="screen" />
+  <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" output="screen">
+   <remap from="/IBVS/Twist" to="/IK/Twist" />
+  </node>
 
 </launch>

@@ -33,7 +33,7 @@ class IBVS:
 		self.cTh = np.linalg.inv(self.hTc) # inverse of what's above--just using the numpy inverse
 		
 		self.bTh = np.identity(4) # base to hand will start out at stow position--bTh will actually control the movement
-		self.twist_pub = rospy.Publisher('/stewart/Twist',Twist)
+		self.twist_pub = rospy.Publisher('/IBVS/Twist',Twist)
 		self.cur_twist = Twist()
 		self.cur_twist.angular.x = 0
 		self.cur_twist.angular.y = 0
@@ -170,6 +170,6 @@ def translationMatrix(x,y,z):
 if __name__ == '__main__':
 	rospy.init_node('IBVS_Controller')
 	controller = IBVS()
-	rospy.Subscriber('/tracker/circle_data',  Float64MultiArray , controller.circle_track)
-	rospy.Subscriber('/stewart/Twist_Feedback',  Twist , controller.ik_feedback)
+	rospy.Subscriber('/IBVS/circle_data',  Float64MultiArray , controller.circle_track)
+	rospy.Subscriber('/IBVS/Twist_Feedback',  Twist , controller.ik_feedback)
 	rospy.spin()

@@ -55,8 +55,8 @@ class stewart_platform:
 		print self.pos_base
 		self.curTwist = Twist()
 		rospy.init_node("stewart_platform")
-		self.joint_pub = rospy.Publisher('/stewart/JointState',JointState)
-		self.twist_pub = rospy.Publisher('/stewart/Twist_Feedback',Twist)
+		self.joint_pub = rospy.Publisher('/IK/JointState',JointState)
+		self.twist_pub = rospy.Publisher('/IK/Twist_Feedback',Twist)
 
 		self.stewart_joints = JointState() # will be passed to ros
 		self.joint_names = ["joint_%d" % i for i in range(0,6) ] # joint names
@@ -116,5 +116,5 @@ class stewart_platform:
 if __name__ == '__main__':
 	print "loading model", rospy.get_param('stewart_platform')
 	platform = stewart_platform( rospy.get_param('stewart_platform') )
-	rospy.Subscriber('/stewart/Twist', Twist, platform.ikSolver)
+	rospy.Subscriber('/IK/Twist', Twist, platform.ikSolver)
 	rospy.spin()
