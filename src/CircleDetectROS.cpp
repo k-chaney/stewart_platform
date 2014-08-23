@@ -1,4 +1,4 @@
-   #include <ros/ros.h>
+#include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
@@ -21,6 +21,7 @@ class ImageConverter
   ros::Publisher rad_pub;
   std_msgs::Float64MultiArray radii;
   int processingScale;
+  double majorToMinor;
  
  
 public:
@@ -35,6 +36,15 @@ public:
     else
     {
       processingScale = 1;
+    }
+    int mTm;
+    if (nh_.getParam("/majorToMinor", mTm))
+    {
+      majorToMinor = mTm;
+    }
+    else
+    {
+      majorToMinor = 1.5;
     }
     std::cout << " Scale: " << processingScale << std::endl;
     image_pub_ = it_.advertise("out", 1);
@@ -96,7 +106,7 @@ public:
           minEllipse[i].size.height = minEllipse[i].size.height * processingScale;
           minEllipse[i].size.width = minEllipse[i].size.width * processingScale;
           double approxCircle = minEllipse[i].size.height/minEllipse[i].size.width;
-          if (approxCircle <1.2 && approxCircle > 0.8)
+          if (approxCircle <majorToMinor && approxCircle > 1/majorToMinor)
           {
             numCircles++;
             circleMask[i] = true;
@@ -107,12 +117,12 @@ public:
     }
 
 
-    std::cout << "Sizes: " << minEllipse.size() << ":"<< numCircles << std::endl;
+//    std::cout << "Sizes: " << minEllipse.size() << ":"<< numCircles << std::endl;
 
-    int p1 = 0;
-    int p2 = 0;
-    int p3 = 0;
-    int p4 = 0;
+    std::vector<double> x;
+    std::vector<double> y;
+    std::vector<double> r;
+
     if (numCircles>4 && numCircles<20 && minEllipse.size()<35) // culls out larger data sets
     {
       bool flag = false;
@@ -120,97 +130,55 @@ public:
       {
         if (circleMask[i])
         {
-            std::vector<int> indicies;
-            std::vector<double> distances; // only tracks for the current i--in theory it will reach a solution rather quickly and not itterate through all but three
             for (int j=0; j<minEllipse.size();j++)
             {
-              if (circleMask[j])
+              if (circleMask[j] && i!=j && ImageConverter::Distance(minEllipse[i].center.x,minEllipse[i].center.y,minEllipse[j].center.x,minEllipse[j].center.y) < 5)
               {
-                if (abs(minEllipse[i].size.height-minEllipse[j].size.height) < 25)
+                    // std::cout << i << ":" << j << "::::"<< abs( (minEllipse[i].size.height>minEllipse[j].size.height ? minEllipse[i].size.height/minEllipse[j].size.height : minEllipse[j].size.height/minEllipse[i].size.height)  - 2) << std::endl;
+                double r0 = minEllipse[i].size.height>minEllipse[i].size.width? minEllipse[i].size.height : minEllipse[i].size.width;
+                double r1 = minEllipse[j].size.height>minEllipse[j].size.width? minEllipse[j].size.height : minEllipse[j].size.width;
+                double diff = (r0>r1?r0/r1:r1/r0)-2;
+                if ((diff>0?diff:-diff) <0.25)
                 {
-                    distances.push_back(ImageConverter::Distance(minEllipse[i].center.x,minEllipse[i].center.y,minEllipse[j].center.x,minEllipse[j].center.y)); // calculates distance between points
-                    if (distances.back()<10)
+                    //std::cout << r0 << ":" << r1 << "::::"<< (diff>0?diff:-diff) << std::endl;
+                     // calculates distance between points
+                    cv::Scalar color = cv::Scalar( 255,255,255 );
+                    cv::ellipse( cv_ptr->image, minEllipse[i], color, 2, 8 );
+                    cv::ellipse( cv_ptr->image, minEllipse[j], color, 2, 8 );
+                    bool success = true;
+                    for (int k=0;k<x.size();k++)
                     {
-                      distances.back() = 0.0;
+                      if( abs(x.at(k)-minEllipse[i].center.x)<10 && abs(y.at(k)-minEllipse[i].center.y)<10 )
+                        {success=false;}
                     }
-                }
-                else
-                {
-                  distances.push_back(0.0);
-                }
-                indicies.push_back(j);
-                //std::cout<<i<<":"<<j<<":"<<std::endl;
-              }
-            }
-            std::cout<<std::endl;
-            //std::cout<<"i:::"<<numCircles<<":"<<distances.size()<<std::endl;
-            for (int j=0;j<distances.size();j++)
-            {
-              if (i!=j && distances.at(j)>10)
-              {
-                for (int k=0;k<distances.size();k++)
-                {
-                  if (j!=k&&i!=k && distances.at(k)>10)
-                  {
-                    if (abs(distances.at(k)-distances.at(j))<1  &&  (abs(minEllipse[indicies.at(j)].center.y-minEllipse[indicies.at(k)].center.y)>10||abs(minEllipse[indicies.at(j)].center.x-minEllipse[indicies.at(k)].center.x)>10)   ) // checks for repeated side distance and make sure it's in a different direction
+                    if(success)
                     {
-                      for (int l=0;l<distances.size();l++)
+                      x.push_back(minEllipse[i].center.x);
+                      y.push_back(minEllipse[i].center.y);
+                      r.push_back(r0>r1?r0:r1);
+                    }
+                    if (x.size() == 4)
+                    {
+                      std::cout << "Points: " << x.size() << std::endl;
+                      for (int index = 0; index < x.size(); index++)
                       {
-                        if (l!=i&&l!=j&&l!=k && distances.at(l)>10)
-                        {
-                          if ( abs( distances.at(l)-(distances.at(j)*sqrt(2)) )<5 )
-                          {
-                              std::cout<<"solved: "<<i<<":"<<j<<":"<<k<<":"<<l<<std::endl;
-                              p1 = i;
-                              p2 = indicies.at(j);
-                              p3 = indicies.at(k);
-                              p4 = indicies.at(l);
-                              std::cout<<"solved: "<<p1<<":"<<p2<<":"<<p3<<":"<<p4<<std::endl;
-                              cv::Scalar color = cv::Scalar( 255,0,255 );
-                              cv::ellipse( cv_ptr->image, minEllipse[p1], color, 2, 8 );
-                              cv::ellipse( cv_ptr->image, minEllipse[p2], color, 2, 8 );
-                              cv::ellipse( cv_ptr->image, minEllipse[p3], color, 2, 8 );
-                              cv::ellipse( cv_ptr->image, minEllipse[p4], color, 2, 8 );
-
-
-                              int j=0;
-                              circle_data.data[3*j]=minEllipse[p1].center.x;
-                              circle_data.data[3*j+1]=minEllipse[p1].center.y;
-                              circle_data.data[3*j+2]=minEllipse[p1].size.height;
-                              j++;
-                              circle_data.data[3*j]=minEllipse[p2].center.x;
-                              circle_data.data[3*j+1]=minEllipse[p2].center.y;
-                              circle_data.data[3*j+2]=minEllipse[p2].size.height;
-                              j++;
-                              circle_data.data[3*j]=minEllipse[p3].center.x;
-                              circle_data.data[3*j+1]=minEllipse[p3].center.y;
-                              circle_data.data[3*j+2]=minEllipse[p3].size.height;
-                              j++;
-                              circle_data.data[3*j]=minEllipse[p4].center.x;
-                              circle_data.data[3*j+1]=minEllipse[p4].center.y;
-                              circle_data.data[3*j+2]=minEllipse[p4].size.height;
-                              circle_pub.publish(circle_data);
-
-
-
-                              flag = true;
-                              break;
-                          }
-                        }
-                        if (flag==true){break;}
+                        circle_data.data[3*index]=x.at(index);
+                        circle_data.data[3*index+1]=y.at(index);
+                        circle_data.data[3*index+2]=r.at(index);
                       }
+                      circle_pub.publish(circle_data);
+                      flag=true;
+                      break;
                     }
-                  }
-                  if (flag==true){break;}
                 }
               }
-              if (flag==true){break;}
             }
 
           }
           if (flag==true){break;}
         }
       }
+
 
     // std::cout<<"solved: "<<p1<<":"<<p2<<":"<<p3<<":"<<p4<<std::endl;
     // cv::Scalar color = cv::Scalar( 255,0,255 );
