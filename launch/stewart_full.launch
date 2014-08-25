@@ -34,10 +34,22 @@
 
  <!-- Visual Jacobian Node and Controller -->
   <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" output="screen">
-   <remap from="/IBVS/Twist" to="/IK/Twist" />
+   <remap from="/IBVS/Twist" to="/X360/Twist_In" />
   </node>
 
 
+  <rosparam command="load" file="$(find stewart_platform)/config/x360.yaml" />
+
+  <node respawn="true" pkg="joy" type="joy_node" name="joy" >
+    <remap from="joy" to="/X360/Joy" />
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.2" />
+  </node> 
+
+
+  <node pkg="stewart_platform" type="stewart_platform_x360.py" name="stewart_joy" output="screen">
+    <remap from="/X360/Twist" to="/IK/Twist" />
+  </node>
 
   <node pkg="stewart_platform" type="stewart_ik.py" name="stewart_platform_ik" output="screen" >
    <remap from="/IK/JointState" to="/stewart/JointState" />
@@ -45,6 +57,5 @@
   </node>
 
   <node pkg="stewart_platform" type="stewart_move_servos.py" name="stewart_servo_controller" output="screen" />
-
 
 </launch>

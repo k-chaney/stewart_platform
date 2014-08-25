@@ -19,34 +19,52 @@ class xbox_controller():
 		self.joy_data = None
 
 
-		self.gantry_publisher = rospy.Publisher('/X360/Twist', Twist)
-		self.gantry_pose = Twist()
-		self.gantry_pose.linear.x = 0.0
-		self.gantry_pose.linear.y = 0.0
-		self.gantry_pose.linear.z = 0.25
-		self.gantry_pose.angular.x = 0.0 # roll
-		self.gantry_pose.angular.y = 0.0 # pitch
-		self.gantry_pose.angular.z = 0.0 # yaw
-		rospy.init_node('gantry_joy', anonymous=True)
-
-
+		self.stewart_twist_pub = rospy.Publisher('/X360/Twist', Twist)
+		self.stewart_pose = Twist()
+		self.stewart_pose.linear.x = 0.0
+		self.stewart_pose.linear.y = 0.0
+		self.stewart_pose.linear.z = 0.25
+		self.stewart_pose.angular.x = 0.0 # roll
+		self.stewart_pose.angular.y = 0.0 # pitch
+		self.stewart_pose.angular.z = 0.0 # yaw
+		rospy.init_node('stewart_joy', anonymous=True)
 		rospy.Subscriber('/X360/Joy', Joy, self.controllerCallback)
+
+		rospy.Subscriber('/X360/Twist_In', Joy, self.IBVS_Twist)
+
+		self.Twist_In = Twist()
+
 	def controllerCallback(self, data):
 		self.joy_data = data
+
+	def IBVS_Twist(self,data):
+		self.Twist_In = data
+
 	def updateStewartPosition(self):
 		while not rospy.is_shutdown():
 			if self.joy_data:
+				print self.getJoyData('axes','rt')
+				if (self.getJoyData('axes','rt') < -0.9):
+					print self.Twist_In
+					self.stewart_twist_pub.publish(self.Twist_In)
+				else:
+					self.stewart_pose.linear.x += self.getJoyData('axes','x') * self.step_size
+					self.stewart_pose.linear.y += self.getJoyData('axes','y') * self.step_size
+					self.stewart_pose.linear.z += self.getJoyData('axes','z') * self.step_size
+					self.stewart_pose.angular.z += self.getJoyData('axes','yaw') * self.step_size
+					self.stewart_pose.angular.y += self.getJoyData('axes','v_dpad')*self.step_size
+					self.stewart_pose.angular.x += self.getJoyData('axes','h_dpad')*self.step_size
+					print self.stewart_pose
+					self.stewart_twist_pub.publish(self.stewart_pose)
+				if (self.getJoyData('axes','lt') < -0.9):
+					self.stewart_pose.linear.x = 0.0
+					self.stewart_pose.linear.y = 0.0
+					self.stewart_pose.linear.z = 0.25
+					self.stewart_pose.angular.x = 0.0 # roll
+					self.stewart_pose.angular.y = 0.0 # pitch
+					self.stewart_pose.angular.z = 0.0 # yaw
 
-				self.gantry_pose.linear.x += self.getJoyData('axes','x') * self.step_size
-				self.gantry_pose.linear.y += self.getJoyData('axes','y') * self.step_size
-				self.gantry_pose.linear.z += self.getJoyData('axes','z') * self.step_size
-				self.gantry_pose.angular.z += self.getJoyData('axes','yaw') * self.step_size
-				self.gantry_pose.angular.y += self.getJoyData('axes','v_dpad')*self.step_size
-				self.gantry_pose.angular.x += self.getJoyData('axes','h_dpad')*self.step_size
 
-				print "XYZ: ",self.gantry_pose.linear.x, self.gantry_pose.linear.y, self.gantry_pose.linear.z, 
-				print "   RPY: ",self.gantry_pose.angular.x, self.gantry_pose.angular.y, self.gantry_pose.angular.z
-				self.gantry_publisher.publish(self.gantry_pose)
 			time.sleep(self.sleep_time)
 	def getJoyData(self,type,name):
 		if type=='axis' or type=='axes':
@@ -56,10 +74,10 @@ class xbox_controller():
 
 if __name__ == '__main__':
 	try:
-		move_gantry = xbox_controller()
-		t = Thread(target=move_gantry.updateStewartPosition)
+		move_stewart = xbox_controller()
+		t = Thread(target=move_stewart.updateStewartPosition)
 		t.start()
 		rospy.spin()
-		move_gantry.alive = False
+		move_stewart.alive = False
 		t.join()
 	except rospy.ROSInterruptException: pass
