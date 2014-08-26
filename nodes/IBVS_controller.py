@@ -27,6 +27,7 @@ class IBVS:
 		self.tgtEdge = rospy.get_param("tgtEdge")
 		self.circleRadius = rospy.get_param("circleRadius")
 		self.lmbda = rospy.get_param("lambda")
+		self.lambdaMatrix = np.diag(self.lmbda['x'],self.lmbda['y'],self.lmbda['z'],self.lmbda['r'],self.lmbda['p'],self.lmbda['yaw'])
 		self.zOffset = rospy.get_param("zOffset")
 		
 		self.hTc = rpy2tr(0, pi/2, pi/2) # just the identity for now
@@ -54,7 +55,7 @@ class IBVS:
 
 	def ik_feedback(self,msg):
 		self.bTh = delta2tr(np.array([msg.linear.x, msg.linear.y, msg.linear.z,msg.angular.x, msg.angular.y, msg.angular.z]))
-		#self.bTh = delta2tr(np.array([0, msg.linear.y, 0.25,0, 0, 0]))
+		#self.bTh = delta2tr(np.array([0, 0, msg.linear.z,0, 0, 0]))
 
 	def circle_track(self,msg):
 		#print msg
@@ -103,7 +104,9 @@ class IBVS:
 #		print self.detPitchM
 #		print  J
 #		print pinv(J).shape, e.shape
-		v = self.lmbda * np.dot(pinv(J) , e )
+
+		# lmbda can be scalar or a diagonal matrix
+		v = self.lambdaMatrix * np.dot(pinv(J) , e )
 #		print "v: ", v
 		Tdelta = trnorm(delta2tr(v))
 #		print "Tdelta: ", Tdelta
@@ -118,7 +121,7 @@ class IBVS:
 		#xyz = transl(bThStar) #[bThStar[0,2],bThStar[1,2],bThStar[2,2]]
 		#print xyz, rpy
 		twist = tr2delta(bThStar)
-#		print "twist: ", twist
+		print "twist: ", twist
 
 		self.cur_twist.angular.x = twist[3]
 		self.cur_twist.angular.y = twist[4]

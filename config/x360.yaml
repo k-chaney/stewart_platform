@@ -2,8 +2,8 @@ joy_hz: 60.000
 step_size: 0.001
 x360:
     axes:
-        x: 3
-        y: 4
+        x: 4
+        y: 3
         z: 1
         yaw: 0
         lt: 2
@@ -24,9 +24,9 @@ x360:
         rj: 10
 x360_dir_mask:
     axes:
-        x: -1
-        y: 1
-        z: 1
+        x: 1
+        y: -1
+        z: -1
         yaw: -1
         lt: 1
         rt: 1
