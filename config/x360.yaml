@@ -1,5 +1,6 @@
 joy_hz: 60.000
 step_size: 0.001
+deadZone: 0.3
 x360:
     axes:
         x: 4
