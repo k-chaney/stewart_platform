@@ -27,7 +27,7 @@ class IBVS:
 		self.tgtEdge = rospy.get_param("tgtEdge")
 		self.circleRadius = rospy.get_param("circleRadius")
 		self.lmbda = rospy.get_param("lambda")
-		self.lambdaMatrix = np.diag(self.lmbda['x'],self.lmbda['y'],self.lmbda['z'],self.lmbda['r'],self.lmbda['p'],self.lmbda['yaw'])
+		self.lambdaMatrix = np.diag([self.lmbda['x'],self.lmbda['y'],self.lmbda['z'],self.lmbda['r'],self.lmbda['p'],self.lmbda['yaw']])
 		self.zOffset = rospy.get_param("zOffset")
 		
 		self.hTc = rpy2tr(0, pi/2, pi/2) # just the identity for now
@@ -106,7 +106,7 @@ class IBVS:
 #		print pinv(J).shape, e.shape
 
 		# lmbda can be scalar or a diagonal matrix
-		v = self.lambdaMatrix * np.dot(pinv(J) , e )
+		v = np.dot(self.lambdaMatrix, np.dot(pinv(J) , e ))
 #		print "v: ", v
 		Tdelta = trnorm(delta2tr(v))
 #		print "Tdelta: ", Tdelta

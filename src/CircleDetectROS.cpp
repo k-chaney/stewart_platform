@@ -83,7 +83,7 @@ public:
     cv::cvtColor( CircleImage, CircleImage, CV_BGR2GRAY );
     //cout << "3 " << endl;
 
-    cv::GaussianBlur( CircleImage, CircleImage, cv::Size(9, 9), 2, 2 );
+    cv::GaussianBlur( CircleImage, CircleImage, cv::Size(3, 3), 2, 2 );
 //    cv::vector<cv::Vec3f> circles;
 //    cv::imshow(WINDOW, CircleImage);
 //    cv::HoughCircles( CircleImage, circles, CV_HOUGH_GRADIENT, 1, CircleImage.rows/(8*processingScale), 200, 100, 0, 0 );
@@ -123,7 +123,7 @@ public:
     std::vector<double> y;
     std::vector<double> r;
 
-    if (numCircles>4 && numCircles<20 && minEllipse.size()<35) // culls out larger data sets
+    if (true)//numCircles>4 && numCircles<20 && minEllipse.size()<35) // culls out larger data sets
     {
       bool flag = false;
       for (int i = 0; i<minEllipse.size();i++)
@@ -132,19 +132,16 @@ public:
         {
             for (int j=0; j<minEllipse.size();j++)
             {
-              if (circleMask[j] && i!=j && ImageConverter::Distance(minEllipse[i].center.x,minEllipse[i].center.y,minEllipse[j].center.x,minEllipse[j].center.y) < 5)
+              if (circleMask[j] && i!=j && ImageConverter::Distance(minEllipse[i].center.x,minEllipse[i].center.y,minEllipse[j].center.x,minEllipse[j].center.y) < 10)
               {
                     // std::cout << i << ":" << j << "::::"<< abs( (minEllipse[i].size.height>minEllipse[j].size.height ? minEllipse[i].size.height/minEllipse[j].size.height : minEllipse[j].size.height/minEllipse[i].size.height)  - 2) << std::endl;
                 double r0 = minEllipse[i].size.height>minEllipse[i].size.width? minEllipse[i].size.height : minEllipse[i].size.width;
                 double r1 = minEllipse[j].size.height>minEllipse[j].size.width? minEllipse[j].size.height : minEllipse[j].size.width;
-                double diff = (r0>r1?r0/r1:r1/r0)-2;
-                if ((diff>0?diff:-diff) <0.25)
+                double diff = (r0>r1?r0/r1:r1/r0);
+                //std::cout << r0 << ":" << r1 << "::::"<< (diff>0?diff:-diff) << std::endl;
+                if (diff-2 < 1)
                 {
-                  //std::cout << r0 << ":" << r1 << "::::"<< (diff>0?diff:-diff) << std::endl;
                   // calculates distance between points
-                  cv::Scalar color = cv::Scalar( 255,255,255 );
-                  cv::ellipse( cv_ptr->image, minEllipse[i], color, 2, 8 );
-                  cv::ellipse( cv_ptr->image, minEllipse[j], color, 2, 8 );
                   bool success = true;
                   for (int k=0;k<x.size();k++)
                   {
@@ -156,6 +153,8 @@ public:
                     x.push_back(minEllipse[i].center.x);
                     y.push_back(minEllipse[i].center.y);
                     r.push_back(r0>r1?r0:r1);
+                    cv::Scalar color = cv::Scalar( 0,0,255);
+                    cv::ellipse( cv_ptr->image, minEllipse[r0>r1?i:j], color, 2, 8 );
                   }
                   if (x.size() == 4)
                   {

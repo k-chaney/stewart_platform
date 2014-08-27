@@ -19,7 +19,6 @@ class xbox_controller():
 		self.deadZone = rospy.get_param('deadZone')
 		self.joy_data = None
 
-
 		self.stewart_twist_pub = rospy.Publisher('/X360/Twist', Twist)
 		self.stewart_pose = Twist()
 		self.stewart_pose.linear.x = 0.0
@@ -45,15 +44,19 @@ class xbox_controller():
 		while not rospy.is_shutdown():
 			if self.joy_data:
 				if (self.getJoyData('axes','rt') < -0.9):
+					self.Twist_In.linear.x += self.getJoyData('axes','x') * self.step_size
+					self.Twist_In.linear.y += self.getJoyData('axes','y') * self.step_size
+					self.Twist_In.linear.z += self.getJoyData('axes','z') * self.step_size
+					self.Twist_In.angular.z += self.getJoyData('axes','yaw') * self.step_size
 					self.stewart_twist_pub.publish(self.Twist_In)
-				if (self.getJoyData('button','b')==1): # deployed
+				if (self.joy_data.buttons[1]==1): # deployed
 					self.stewart_pose.linear.x = 0.0
 					self.stewart_pose.linear.y = 0.0
 					self.stewart_pose.linear.z = 0.25
 					self.stewart_pose.angular.x = 0.0 # roll
 					self.stewart_pose.angular.y = 0.0 # pitch
 					self.stewart_pose.angular.z = 0.0 # yaw
-				if (self.getJoyData('button','a')==1): # stow
+				if (self.joy_data.buttons[0]==1): # stow
 					self.stewart_pose.linear.x = 0.0
 					self.stewart_pose.linear.y = 0.0
 					self.stewart_pose.linear.z = 0.05
@@ -78,8 +81,8 @@ class xbox_controller():
 			else:
 				return 0
 		elif type=='button':
-			return self.joy_data.button[self.controllerMapping[type][name]]*self.controllerMask[type][name]
-			
+			return self.joy_data.buttons[self.controllerMapping[type][name]]*self.controllerMask[type][name]
+
 if __name__ == '__main__':
 	try:
 		move_stewart = xbox_controller()
