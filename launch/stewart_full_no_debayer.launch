@@ -1,0 +1,53 @@
+<launch>
+  <!-- All vision parameters -->
+  <rosparam command="load" file="$(find stewart_platform)/config/vision.yaml" />
+  <rosparam command="load" file="$(find stewart_platform)/config/platformModel.yaml" />
+  <rosparam command="load" file="$(find stewart_platform)/config/servoConfig.yaml" />
+
+
+  <!-- nodelet manager process -->
+  <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager"
+        args="manager" />
+
+  <!-- camera driver nodelet -->
+  <node pkg="nodelet" type="nodelet" name="camera1394_nodelet"
+        args="load camera1394/driver camera_nodelet_manager">
+        <!-- Needs it again here so that it's read directly into the nodelet (will if if I get a chance) -->
+        <!-- rosparam file="$(find stewart_platform)/config/vision.yaml" / -->
+  </node>
+
+  <!-- Image Proc Node -->
+  <node pkg="stewart_platform" type="CircleDetect" name="CircleDetect" output="screen">
+	 <remap from="in" to="camera/image_raw" />
+	 <remap from="out" to="circle_image" />
+   <remap from="circle_data" to="/IBVS/circle_data" />
+  </node>
+
+
+ <!-- Visual Jacobian Node and Controller -->
+  <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" output="screen">
+   <remap from="/IBVS/Twist" to="/X360/Twist_In" />
+  </node>
+
+
+  <rosparam command="load" file="$(find stewart_platform)/config/x360.yaml" />
+
+  <node respawn="true" pkg="joy" type="joy_node" name="joy" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.2" />
+    <remap from="/joy" to="/X360/Joy" />
+  </node> 
+
+
+  <node pkg="stewart_platform" type="stewart_platform_x360.py" name="stewart_joy" output="screen">
+    <remap from="/X360/Twist" to="/IK/Twist" />
+  </node>
+
+  <node pkg="stewart_platform" type="stewart_ik.py" name="stewart_platform_ik" >
+   <remap from="/IK/JointState" to="/stewart/JointState" />
+   <remap from="/IK/Twist_Feedback" to="/IBVS/Twist_Feedback" />
+  </node>
+
+  <node pkg="stewart_platform" type="stewart_move_servos.py" name="stewart_servo_controller" />
+
+</launch>

@@ -1,0 +1,28 @@
+<launch>
+  <!-- All vision parameters -->
+  <rosparam command="load" file="$(find stewart_platform)/config/vision.yaml" />
+
+  <!-- nodelet manager process -->
+  <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager"
+        args="manager" />
+
+  <!-- camera driver nodelet -->
+  <node pkg="nodelet" type="nodelet" name="camera1394_nodelet"
+        args="load camera1394/driver camera_nodelet_manager">
+        <!-- Needs it again here so that it's read directly into the nodelet (will if if I get a chance) -->
+        <!-- rosparam file="$(find stewart_platform)/config/vision.yaml" / -->
+  </node>
+
+  <!-- Image Proc Node -->
+  <node pkg="stewart_platform" type="CircleDetect" name="CircleDetect">
+	 <remap from="in" to="camera/image_raw" />
+	 <remap from="out" to="circle_image" />
+   <remap from="circle_data" to="/IBVS/circle_data" />
+  </node>
+
+  <!-- Visual Jacobian Node and Controller -->
+  <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" output="screen">
+   <remap from="/IBVS/Twist" to="/IK/Twist" />
+  </node>
+
+</launch>
