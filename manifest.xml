@@ -17,6 +17,8 @@
   <depend package="cv_bridge"/>
   <depend package="image_transport"/>
   <depend package="asctec_hl_interface"/>
+  <depend package="camera1394" />
+  
 </package>
 
 

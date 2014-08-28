@@ -1,11 +1,11 @@
 bayer_method: ''
-bayer_pattern: rggb
+bayer_pattern: gbrg #rggb
 frame_id: /camera
 frame_rate: 60.0
 format7_color_coding: raw8
 gain: 12.041193008422852
 gamma: 1.2000000000000002
-guid: 00b09d01008b7769
+guid: 00b09d0100b748f4  #00b09d01008b7769
 use_ros_time: true
 video_mode: format7_mode0
 
@@ -26,4 +26,4 @@ lambda:
     p: 0.02
     yaw: 0.02
 zOffset: 0.25
-majorToMinor: 1.50
+majorToMinor: 2.00

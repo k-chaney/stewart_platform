@@ -37,16 +37,17 @@ public:
     {
       processingScale = 1;
     }
-    int mTm;
+    double mTm;
     if (nh_.getParam("/majorToMinor", mTm))
     {
       majorToMinor = mTm;
     }
     else
     {
-      majorToMinor = 1.5;
+      majorToMinor = 2;
     }
     std::cout << " Scale: " << processingScale << std::endl;
+    std::cout << " mTm: " << majorToMinor << std::endl;
     image_pub_ = it_.advertise("out", 1);
     image_sub_ = it_.subscribe("in", 1, &ImageConverter::imageCb, this);
     cv::namedWindow(WINDOW);
@@ -83,19 +84,23 @@ public:
     cv::cvtColor( CircleImage, CircleImage, CV_BGR2GRAY );
     //cout << "3 " << endl;
 
-    cv::GaussianBlur( CircleImage, CircleImage, cv::Size(3, 3), 2, 2 );
+    cv::GaussianBlur( CircleImage, CircleImage, cv::Size(5, 5), 2, 2 );
 //    cv::vector<cv::Vec3f> circles;
 //    cv::imshow(WINDOW, CircleImage);
 //    cv::HoughCircles( CircleImage, circles, CV_HOUGH_GRADIENT, 1, CircleImage.rows/(8*processingScale), 200, 100, 0, 0 );
 
     cv::vector<std::vector<cv::Point> > contours;
     cv::vector<cv::Vec4i> hierarchy;
-    cv::Canny(CircleImage,CircleImage,100,300,3);
+    cv::Canny(CircleImage,CircleImage,100,250,3);
     //cv::imshow(WINDOW, CircleImage);
     cv::findContours(CircleImage,contours,hierarchy,CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
     cv::vector<cv::RotatedRect> minEllipse( contours.size() );
     int numCircles = 0;
     bool circleMask [contours.size()];
+    for (int i = 0;i<contours.size();i++)
+    {
+      circleMask[i] = false;
+    }
     for( int i = 0; i < contours.size(); i++ )
     {
         if( contours[i].size() > 5 )
@@ -105,14 +110,17 @@ public:
           minEllipse[i].center.y = minEllipse[i].center.y * processingScale;
           minEllipse[i].size.height = minEllipse[i].size.height * processingScale;
           minEllipse[i].size.width = minEllipse[i].size.width * processingScale;
-          double approxCircle = minEllipse[i].size.height/minEllipse[i].size.width;
-          if (approxCircle <majorToMinor && approxCircle > 1/majorToMinor)
+          double approxCircle = minEllipse[i].size.height>minEllipse[i].size.width?minEllipse[i].size.height/minEllipse[i].size.width:minEllipse[i].size.width/minEllipse[i].size.height;
+          std::cout << i << ":" << approxCircle;
+          if (approxCircle<majorToMinor)
           {
+            std::cout << ": yes" << std::endl;
             numCircles++;
             circleMask[i] = true;
             cv::Scalar color = cv::Scalar( 255,255,0 );
             cv::ellipse( cv_ptr->image, minEllipse[i], color, 2, 8 );
           }
+          std::cout <<  std::endl;
         }
     }
 
@@ -128,19 +136,21 @@ public:
       bool flag = false;
       for (int i = 0; i<minEllipse.size();i++)
       {
-        if (circleMask[i])
+        if (circleMask[i]==true)
         {
             for (int j=0; j<minEllipse.size();j++)
             {
-              if (circleMask[j] && i!=j && ImageConverter::Distance(minEllipse[i].center.x,minEllipse[i].center.y,minEllipse[j].center.x,minEllipse[j].center.y) < 10)
+              if (circleMask[j]==true && i!=j && ImageConverter::Distance(minEllipse[i].center.x,minEllipse[i].center.y,minEllipse[j].center.x,minEllipse[j].center.y) < 10)
               {
                     // std::cout << i << ":" << j << "::::"<< abs( (minEllipse[i].size.height>minEllipse[j].size.height ? minEllipse[i].size.height/minEllipse[j].size.height : minEllipse[j].size.height/minEllipse[i].size.height)  - 2) << std::endl;
                 double r0 = minEllipse[i].size.height>minEllipse[i].size.width? minEllipse[i].size.height : minEllipse[i].size.width;
                 double r1 = minEllipse[j].size.height>minEllipse[j].size.width? minEllipse[j].size.height : minEllipse[j].size.width;
                 double diff = (r0>r1?r0/r1:r1/r0);
-                //std::cout << r0 << ":" << r1 << "::::"<< (diff>0?diff:-diff) << std::endl;
-                if (diff-2 < 1)
+                diff = (diff-2.0)>0.0?(diff-2.0):-(diff-2.0); // manual abs
+                std::cout << r0 << ":" << r1 << "::::"<<diff;
+                if (diff < 0.5)
                 {
+                  std::cout << "  yes  ";
                   // calculates distance between points
                   bool success = true;
                   for (int k=0;k<x.size();k++)
@@ -170,6 +180,7 @@ public:
                     break;
                   }
                 }
+                std::cout  << std::endl;
               }
             }
 
