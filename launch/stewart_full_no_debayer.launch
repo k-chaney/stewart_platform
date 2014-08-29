@@ -13,7 +13,7 @@
   <node pkg="nodelet" type="nodelet" name="camera1394_nodelet"
         args="load camera1394/driver camera_nodelet_manager">
         <!-- Needs it again here so that it's read directly into the nodelet (will if if I get a chance) -->
-        <!-- rosparam file="$(find stewart_platform)/config/vision.yaml" / -->
+        <rosparam file="$(find stewart_platform)/config/vision.yaml" />
   </node>
 
   <!-- Image Proc Node -->
