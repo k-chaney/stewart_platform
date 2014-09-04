@@ -59,7 +59,7 @@ class xbox_controller():
 				if (self.joy_data.buttons[0]==1): # stow
 					self.stewart_pose.linear.x = 0.0
 					self.stewart_pose.linear.y = 0.0
-					self.stewart_pose.linear.z = 0.05
+					self.stewart_pose.linear.z = 0.01
 					self.stewart_pose.angular.x = 0.0 # roll
 					self.stewart_pose.angular.y = 0.0 # pitch
 					self.stewart_pose.angular.z = 0.0 # yaw
