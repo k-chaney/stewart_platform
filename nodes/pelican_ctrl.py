@@ -14,7 +14,7 @@ from asctec_hl_comm.msg import mav_rcdata
 
 class xbox_controller():
 	def __init__(self):
-		self.lmbda = 0.2 # tuning
+		self.lambda_matrix = {'x':0.1,'y':0.1,'z':0.1,'yaw':0.1} # tuning for amount and direction
 
 		self.pelican_ctrl_pub = rospy.Publisher('/Pelican/ctrl', mav_ctrl)
 		self.pelican_ctrl = mav_ctrl()
@@ -28,15 +28,22 @@ class xbox_controller():
 		self.pelican_ctrl.v_max_xy = 1
 		self.pelican_ctrl.v_max_z = 1
 
-		self.typeCtrl = 7 # controller channel to listen to
-		self.velocityMark = 2040 # the channel output when it's set to velocity
+		self.pelican_safe = mav_ctrl()
+		self.pelican_safe.type = 2 # 1--acceleration  2--velocity   3--position
+		self.pelican_safe.x = 0
+		self.pelican_safe.y = 0
+		self.pelican_safe.z = 0
+		self.pelican_safe.yaw = 0
+		self.pelican_safe.v_max_xy = 1
+		self.pelican_safe.v_max_z = 1
+
+		self.safeIsWritten = False
 
 
-		rospy.init_node('pelican_joy', anonymous=True)
-
+		rospy.init_node('pelican_control', anonymous=True)
 
 		self.joy_data = None
-		rospy.Subscriber('/Pelican/Joy', mav_rcdata, self.controllerCallback)
+		rospy.Subscriber('/X360/Joy', Joy, self.controllerCallback)
 
 		self.pelican_pose = PoseStamped()
 		rospy.Subscriber('/Pelican/Pose_Feedback', PoseStamped, self.poseCallback)
@@ -53,16 +60,21 @@ class xbox_controller():
 		self.pelican_pose = data
 
 	def stewartTwistCallback(self,stewartCurrentTwist):
-		if (self.joy_data.channel[self.typeCtrl] == self.velocityMark):
-			self.pelican_ctrl.type = 2
-			self.pelican_ctrl.x = (stewartCurrentTwist.linear.x-stewartDefaultTwist.linear.x) * self.lmbda
-			self.pelican_ctrl.y = (stewartCurrentTwist.linear.y-stewartDefaultTwist.linear.y) * self.lmbda
-			self.pelican_ctrl.z = (stewartCurrentTwist.linear.z-stewartDefaultTwist.linear.z) * self.lmbda
-			self.pelican_ctrl.yaw = (stewartCurrentTwist.angular.z-stewartDefaultTwist.angular.z) * self.lmbda
-			self.pelican_ctrl.v_max_xy = 1
-			self.pelican_ctrl.v_max_z = 1
+		if (not self.joy_data is None):
+			if (self.joy_data.axes[5] < -0.9): # deadmans switch
+				self.safeIsWritten = False
+				self.pelican_ctrl.type = 2
+				self.pelican_ctrl.x = (stewartCurrentTwist.linear.x-stewartDefaultTwist.linear.x) * self.lambda_matrix['x']
+				self.pelican_ctrl.y = (stewartCurrentTwist.linear.y-stewartDefaultTwist.linear.y) * self.lambda_matrix['y']
+				self.pelican_ctrl.z = (stewartCurrentTwist.linear.z-stewartDefaultTwist.linear.z) * self.lambda_matrix['z']
+				self.pelican_ctrl.yaw = (stewartCurrentTwist.angular.z-stewartDefaultTwist.angular.z) * self.lambda_matrix['yaw']
+				self.pelican_ctrl.v_max_xy = 1
+				self.pelican_ctrl.v_max_z = 1
+				self.pelican_ctrl_pub.publish(self.pelican_ctrl)
+			elif (self.safeIsWritten==False): # debounces the safe command write
+				self.safeIsWritten = True
+				self.pelican_ctrl_pub.publish(self.pelican_safe)
 
-			self.pelican_ctrl_pub.publish(self.pelican_ctrl)
 
 if __name__ == '__main__':
 	try:
