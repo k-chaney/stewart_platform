@@ -34,4 +34,4 @@ rosbuild_add_executable( CircleDetect src/CircleDetectROS.cpp )
 target_link_libraries( CircleDetect ${OpenCV_LIBS})
 
 
-rosbuild_add_executable(single_image src/single_image.cpp)
+#rosbuild_add_executable(single_image src/single_image.cpp)
