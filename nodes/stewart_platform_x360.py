@@ -69,10 +69,6 @@ class xbox_controller():
 					self.stewart_pose.linear.z += self.getJoyData('axes','z') * self.step_size
 					self.stewart_pose.angular.z += self.getJoyData('axes','yaw') * self.step_size
 					self.stewart_twist_pub.publish(self.stewart_pose)
-
-
-
-
 			time.sleep(self.sleep_time)
 	def getJoyData(self,type,name):
 		if type=='axis' or type=='axes':

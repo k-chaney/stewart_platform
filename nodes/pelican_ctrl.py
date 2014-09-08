@@ -12,8 +12,9 @@ from geometry_msgs.msg import Twist
 from asctec_hl_comm.msg import mav_ctrl
 from asctec_hl_comm.msg import mav_rcdata
 
-class xbox_controller():
+class pelican_controller():
 	def __init__(self):
+		self.sleep_time = 1 / 60
 		self.lambda_matrix = {'x':0.1,'y':0.1,'z':0.1,'yaw':0.1} # tuning for amount and direction
 
 		self.pelican_ctrl_pub = rospy.Publisher('/Pelican/ctrl', mav_ctrl)
@@ -56,6 +57,7 @@ class xbox_controller():
 
 		# even if the IK doesn't solve this twist it is still this far away from the target. It may actually turn out to help get the system unstuck
 		rospy.Subscriber('/IK/Twist', Twist, self.stewartTwistCallback)
+		self.stewartCurrentTwist=None
 
 	def controllerCallback(self, data): # needs to detect what 
 		self.joy_data = data
@@ -63,26 +65,33 @@ class xbox_controller():
 	def poseCallback(self,data): # brings in the pelican pose for a positioning threshold
 		self.pelican_pose = data
 
-	# may want to change this to dedicated control loop
-	def stewartTwistCallback(self,stewartCurrentTwist):
-		if (not self.joy_data is None):
-			if (self.joy_data.axes[5] < -0.9): # deadmans switch
-				self.safeIsWritten = False
-				self.pelican_ctrl.type = 2
-				self.pelican_ctrl.x = (stewartCurrentTwist.linear.x-stewartDefaultTwist.linear.x) * self.lambda_matrix['x']
-				self.pelican_ctrl.y = (stewartCurrentTwist.linear.y-stewartDefaultTwist.linear.y) * self.lambda_matrix['y']
-				self.pelican_ctrl.z = (stewartCurrentTwist.linear.z-stewartDefaultTwist.linear.z) * self.lambda_matrix['z']
-				self.pelican_ctrl.yaw = (stewartCurrentTwist.angular.z-stewartDefaultTwist.angular.z) * self.lambda_matrix['yaw']
-				self.pelican_ctrl.v_max_xy = 1
-				self.pelican_ctrl.v_max_z = 1
-				self.pelican_ctrl_pub.publish(self.pelican_ctrl)
-			elif (self.safeIsWritten==False): # debounces the safe command write
-				self.safeIsWritten = True
-				self.pelican_ctrl_pub.publish(self.pelican_safe)
+	def stewartTwistCallback(self,data):
+		self.stewartCurrentTwist = data
+
+	# maintains the control loop even in the event of IBVS stopping
+	def updatePelican(self):
+		while not rospy.is_shutdown():
+			if (not self.joy_data is None and (not self.stewartCurrentTwist is None)):
+				if (self.joy_data.axes[5] < -0.9): # deadmans switch
+					self.safeIsWritten = False
+					self.pelican_ctrl.type = 2
+					self.pelican_ctrl.x = (self.stewartCurrentTwist.linear.x-self.stewartDefaultTwist.linear.x) * self.lambda_matrix['x']
+					self.pelican_ctrl.y = (self.stewartCurrentTwist.linear.y-self.stewartDefaultTwist.linear.y) * self.lambda_matrix['y']
+					self.pelican_ctrl.z = (self.stewartCurrentTwist.linear.z-self.stewartDefaultTwist.linear.z) * self.lambda_matrix['z']
+					self.pelican_ctrl.yaw = (self.stewartCurrentTwist.angular.z-self.stewartDefaultTwist.angular.z) * self.lambda_matrix['yaw']
+					self.pelican_ctrl.v_max_xy = 1
+					self.pelican_ctrl.v_max_z = 1
+					self.pelican_ctrl_pub.publish(self.pelican_ctrl)
+				elif (self.safeIsWritten==False): # debounces the safe command write
+					self.safeIsWritten = True
+					self.pelican_ctrl_pub.publish(self.pelican_safe)
+			time.sleep(self.sleep_time)
 
 
 if __name__ == '__main__':
 	try:
-		move_stewart = xbox_controller()
+		move_pelican = pelican_controller()
+		t = Thread(target=move_pelican.updatePelican)
+		t.start()
 		rospy.spin()
 	except rospy.ROSInterruptException: pass
