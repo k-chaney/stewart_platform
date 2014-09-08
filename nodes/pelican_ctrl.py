@@ -45,13 +45,17 @@ class xbox_controller():
 		self.joy_data = None
 		rospy.Subscriber('/X360/Joy', Joy, self.controllerCallback)
 
+
+		# don't have a proper node name for this yet but nothing is implemented yet
 		self.pelican_pose = PoseStamped()
 		rospy.Subscriber('/Pelican/Pose_Feedback', PoseStamped, self.poseCallback)
 
 		self.stewartDefaultTwist = Twist() # the default twist
 		self.stewartDefaultTwist.linear.z=0.25
 
-		rospy.Subscriber('/Pelican/Stewart_Twist', Twist, self.stewartTwistCallback)
+
+		# even if the IK doesn't solve this twist it is still this far away from the target. It may actually turn out to help get the system unstuck
+		rospy.Subscriber('/IK/Twist', Twist, self.stewartTwistCallback)
 
 	def controllerCallback(self, data): # needs to detect what 
 		self.joy_data = data
@@ -59,6 +63,7 @@ class xbox_controller():
 	def poseCallback(self,data): # brings in the pelican pose for a positioning threshold
 		self.pelican_pose = data
 
+	# may want to change this to dedicated control loop
 	def stewartTwistCallback(self,stewartCurrentTwist):
 		if (not self.joy_data is None):
 			if (self.joy_data.axes[5] < -0.9): # deadmans switch
