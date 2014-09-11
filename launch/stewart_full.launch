@@ -58,4 +58,13 @@
 
   <node pkg="stewart_platform" type="stewart_move_servos.py" name="stewart_servo_controller" />
 
+
+  <node pkg="stewart_platform" type="pelican_ctrl.py" name="pelican_control" >
+   <remap from="/Pelican/Joy" to="/X360/Joy" />
+   <remap from="/Pelican/ctrl" to="/fcu/control" />
+   <remap from="/Pelican/PoseFeedback" to="/vicon/pelican/pelican" />
+   <remap from="/Pelican/StewartTwist" to="/IK/Twist" />
+  </node>
+
+
 </launch>

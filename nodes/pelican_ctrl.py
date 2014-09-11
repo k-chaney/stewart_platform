@@ -45,18 +45,18 @@ class pelican_controller():
 		rospy.init_node('pelican_control', anonymous=True)
 
 		self.joy_data = None
-		rospy.Subscriber('/X360/Joy', Joy, self.controllerCallback)
+		rospy.Subscriber('/Pelican/Joy', Joy, self.controllerCallback)
 
 		# don't have a proper node name for this yet but nothing is implemented yet
 		self.pelican_pose = PoseStamped()
-		rospy.Subscriber('/Pelican/Pose_Feedback', PoseStamped, self.poseCallback)
+		rospy.Subscriber('/Pelican/PoseFeedback', PoseStamped, self.poseCallback)
 		self.pelican_safe_position = [[-2,2],[-2,2],[0,2]]
 
 		self.stewartDefaultTwist = Twist() # the default twist
 		self.stewartDefaultTwist.linear.z=0.25
 
 		# even if the IK doesn't solve this twist it is still this far away from the target. It may actually turn out to help get the system unstuck
-		rospy.Subscriber('/IK/Twist', Twist, self.stewartTwistCallback)
+		rospy.Subscriber('/Pelican/StewartTwist', Twist, self.stewartTwistCallback)
 		self.stewartCurrentTwist=None
 
 	def controllerCallback(self, data): # needs to detect what 

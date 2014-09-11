@@ -1,13 +1,13 @@
-#bayer_method: ''
-#bayer_pattern: gbrg #rggb
+bayer_method: ''
+bayer_pattern: gbrg #rggb
 frame_id: /camera
 frame_rate: 60.0
-#format7_color_coding: raw8
+format7_color_coding: raw8
 gain: 12.041193008422852
 gamma: 1.2000000000000002
 guid: 00b09d0100b748f4  #00b09d01008b7769
 use_ros_time: true
-video_mode: 640x480_mono8 #format7_mode0
+video_mode: format7_mode0
 
 camera:
     focal_length: 1.80
