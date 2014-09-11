@@ -8,6 +8,7 @@ import rospy
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Float64
 from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import Pose
 from geometry_msgs.msg import Twist
 from asctec_hl_comm.msg import mav_ctrl
 from asctec_hl_comm.msg import mav_rcdata
@@ -15,7 +16,8 @@ from asctec_hl_comm.msg import mav_rcdata
 class pelican_controller():
 	def __init__(self):
 		self.sleep_time = 1 / 60
-		self.lambda_matrix = {'x':0.1,'y':0.1,'z':0.1,'yaw':0.1} # tuning for amount and direction
+		# +z is down for the stewart platform -- the x360.yaml denotes this with a z mask of -1
+		self.lambda_matrix = {'x':0.1,'y':0.1,'z':-0.1,'yaw':0.0} # tuning for amount and direction
 
 		self.pelican_ctrl_pub = rospy.Publisher('/Pelican/ctrl', mav_ctrl)
 		self.pelican_ctrl = mav_ctrl()
@@ -40,20 +42,18 @@ class pelican_controller():
 
 		self.safeIsWritten = False
 
-
 		rospy.init_node('pelican_control', anonymous=True)
 
 		self.joy_data = None
 		rospy.Subscriber('/X360/Joy', Joy, self.controllerCallback)
 
-
 		# don't have a proper node name for this yet but nothing is implemented yet
 		self.pelican_pose = PoseStamped()
 		rospy.Subscriber('/Pelican/Pose_Feedback', PoseStamped, self.poseCallback)
+		self.pelican_safe_position = [[-2,2],[-2,2],[0,2]]
 
 		self.stewartDefaultTwist = Twist() # the default twist
 		self.stewartDefaultTwist.linear.z=0.25
-
 
 		# even if the IK doesn't solve this twist it is still this far away from the target. It may actually turn out to help get the system unstuck
 		rospy.Subscriber('/IK/Twist', Twist, self.stewartTwistCallback)
@@ -72,7 +72,7 @@ class pelican_controller():
 	def updatePelican(self):
 		while not rospy.is_shutdown():
 			if (not self.joy_data is None and (not self.stewartCurrentTwist is None)):
-				if (self.joy_data.axes[5] < -0.9): # deadmans switch
+				if (self.joy_data.axes[5] < -0.9 and self.isSafePosition()): # deadmans switch
 					self.safeIsWritten = False
 					self.pelican_ctrl.type = 2
 					self.pelican_ctrl.x = (self.stewartCurrentTwist.linear.x-self.stewartDefaultTwist.linear.x) * self.lambda_matrix['x']
@@ -87,6 +87,8 @@ class pelican_controller():
 					self.pelican_ctrl_pub.publish(self.pelican_safe)
 			time.sleep(self.sleep_time)
 
+	def isSafePosition():
+		return (self.pelican_safe_position[0][0]<self.pelican_safe_pose.position.x<self.pelican_safe_position[0][1]) and (self.pelican_safe_position[1][0]<self.pelican_safe_pose.position.y<self.pelican_safe_position[1][1]) and (self.pelican_safe_position[2][0]<self.pelican_safe_pose.position.z<self.pelican_safe_position[2][1])
 
 if __name__ == '__main__':
 	try:
