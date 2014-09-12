@@ -25,7 +25,7 @@
   </node>
 
   <!-- Image Proc Node -->
-  <node pkg="stewart_platform" type="CircleDetect" name="CircleDetect" output="screen">
+  <node pkg="stewart_platform" type="CircleDetect" name="CircleDetect" >
 	 <remap from="in" to="camera/image_color" />
 	 <remap from="out" to="circle_image" />
    <remap from="circle_data" to="/IBVS/circle_data" />
@@ -33,7 +33,7 @@
 
 
  <!-- Visual Jacobian Node and Controller -->
-  <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" output="screen">
+  <node pkg="stewart_platform" type="IBVS_controller.py" name="IBVS_Controller" >
    <remap from="/IBVS/Twist" to="/X360/Twist_In" />
   </node>
 
@@ -47,7 +47,7 @@
   </node> 
 
 
-  <node pkg="stewart_platform" type="stewart_platform_x360.py" name="stewart_joy" output="screen">
+  <node pkg="stewart_platform" type="stewart_platform_x360.py" name="stewart_joy">
     <remap from="/X360/Twist" to="/IK/Twist" />
   </node>
 
@@ -59,7 +59,7 @@
   <node pkg="stewart_platform" type="stewart_move_servos.py" name="stewart_servo_controller" />
 
 
-  <node pkg="stewart_platform" type="pelican_ctrl.py" name="pelican_control" >
+  <node pkg="stewart_platform" type="pelican_ctrl.py" name="pelican_control"  output="screen">
    <remap from="/Pelican/Joy" to="/X360/Joy" />
    <remap from="/Pelican/ctrl" to="/fcu/control" />
    <remap from="/Pelican/PoseFeedback" to="/vicon/pelican/pelican" />
